@@ -11,9 +11,11 @@ import { GoTo } from "../../../Actions/GoTo";
 import { Mine } from "../../../Actions/Mine";
 import { Sleep } from "../../../Actions/Sleep";
 import { Function } from "../../../Actions/Function";
-import { Equip } from '../../../Actions/Equip';
-import { DepositToChest } from '../../../Actions/DepositToChest';
-import { TakeFromChest } from '../../../Actions/TakeFromChest';
+import { Equip } from "../../../Actions/Equip";
+import { DepositToChest } from "../../../Actions/DepositToChest";
+import { TakeFromChest } from "../../../Actions/TakeFromChest";
+import { DepositTask } from "../../../Types/DepositTask";
+import { EquipTask } from "../../../Types/EquipTask";
 
 export class TaskNode implements ASTNode {
     params: any[] = [];
@@ -25,19 +27,20 @@ export class TaskNode implements ASTNode {
         ...params: any[]
     ) {
         this.params = params;
-        this.taskName = this.action + " '" + this.name + this.formatParameters(params);
+        this.taskName = this.action + " '" + this.name + ": " + this.formatParameters(params);
     }
 
     formatParameters(params: any[]): string {
-        return (
-            (params.length > 0 ? " : " : "") +
-            params
-                .map((p) => {
-                    if (typeof p === "function") return "function";
-                    return p.toString();
-                })
-                .join(", ")
-        );
+        let str = params
+            .map((param) => {
+                if (param instanceof Vec3) {
+                    return param.toString();
+                } else {
+                    return JSON.stringify(param);
+                }
+            })
+            .join(", ");
+        return str;
     }
 
     prettyPrint(indent: number): string {
@@ -47,7 +50,7 @@ export class TaskNode implements ASTNode {
             chalk.green(this.action) +
             " '" +
             this.name +
-            "'" +
+            "': " +
             this.formatParameters(this.params);
 
         return str;
@@ -85,7 +88,17 @@ export class TaskNode implements ASTNode {
                     return new Function(bot, this.taskName, firstParam);
 
                 case "equip":
-                    return new Equip(bot, this.taskName, firstParam);
+                    let equipTask: EquipTask = firstParam as EquipTask;
+
+                    if (!(typeof equipTask.itemName === "string"))
+                        throw new Error(
+                            "Invalid item: " +
+                                equipTask.itemName +
+                                " on" +
+                                JSON.stringify(equipTask)
+                        );
+
+                    return new Equip(bot, this.taskName, equipTask);
             }
         }
 
@@ -97,6 +110,26 @@ export class TaskNode implements ASTNode {
                 case "deposit":
                     if (!(firstParam instanceof Vec3))
                         throw new Error("Invalid position: " + firstParam);
+
+                    let depositTask: DepositTask = secondParam as DepositTask;
+
+                    if (!(typeof depositTask.itemName === "string"))
+                        throw new Error(
+                            "Invalid item name: " +
+                                secondParam +
+                                " on" +
+                                JSON.stringify(depositTask)
+                        );
+
+                    if (
+                        !(typeof depositTask.amount === "number" || secondParam["amount"] === "all")
+                    )
+                        throw new Error(
+                            "Invalid amount: " +
+                                secondParam["amount"] +
+                                " on" +
+                                JSON.stringify(depositTask)
+                        );
 
                     return new DepositToChest(bot, this.taskName, firstParam, secondParam);
 

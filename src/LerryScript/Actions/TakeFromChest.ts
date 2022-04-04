@@ -5,15 +5,20 @@ import { DepositTask } from "../Types/DepositTask";
 import { mcData } from "../projectSettings";
 
 export class TakeFromChest extends Action {
+    itemName: string;
+    amount: number | "all";
     constructor(bot: Bot, name: string, private pos: Vec3, private itemsToTake: DepositTask) {
         super(bot, name);
 
-        for (let [name, amount] of Object.entries(this.itemsToTake)) {
-            let item = mcData.itemsByName[name];
+        console.log(itemsToTake);
 
-            if (!item) {
-                throw new Error("No item found with name " + name);
-            }
+        this.itemName = itemsToTake.itemName;
+        this.amount = itemsToTake.amount;
+
+        if (!this.itemName || !mcData.itemsByName[this.itemName]) {
+            throw new Error(
+                "No item found with name " + this.itemName + " in " + JSON.stringify(itemsToTake)
+            );
         }
     }
 
@@ -29,24 +34,22 @@ export class TakeFromChest extends Action {
 
         let chest = await this.bot.openChest(chestBlock);
 
-        for (let [name, amount] of Object.entries(this.itemsToTake)) {
-            let item = mcData.itemsByName[name];
+        let item = mcData.itemsByName[this.itemName];
 
-            let takeAmount = amount;
-            if (amount === "all") {
-                takeAmount = chest.count(item.id, null);
-            }
-            try {
-                await chest.withdraw(item.id, item.metadata, takeAmount as number);
-            } catch (e: any) {
-                chest.close();
-                this.setError(e);
-                return;
-            }
-
-            this.setFinished();
-            chest.close();
+        let takeAmount = this.amount;
+        if (takeAmount === "all") {
+            takeAmount = chest.count(item.id, null);
         }
+        try {
+            await chest.withdraw(item.id, item.metadata, takeAmount as number);
+        } catch (e: any) {
+            chest.close();
+            this.setError(e);
+            return;
+        }
+
+        this.setFinished();
+        chest.close();
     }
 
     onStateExited(): void {

@@ -2,33 +2,28 @@ import { Action } from "./Action";
 import { Bot } from "mineflayer";
 import { EquipTask } from "../Types/EquipTask";
 import { mcData } from "../projectSettings";
+import { EquipPosition } from "../Types/EquipPosition";
 
 export class Equip extends Action {
-    constructor(bot: Bot, name: string, private task: EquipTask) {
+    itemName: string;
+    place: EquipPosition;
+
+    constructor(bot: Bot, name: string, private equipTask: EquipTask) {
         super(bot, name);
 
-        let entries = Object.entries(this.task);
+        this.itemName = equipTask.itemName;
+        this.place = equipTask.place;
 
-        if (entries.length !== 1) {
-            throw new Error("Equip task must have exactly one entry");
-        }
-
-        for (let [name, place] of entries) {
-            let item = mcData.itemsByName[name];
-
-            if (!item) {
-                throw new Error("No item found with name " + name);
-            }
+        if (!this.itemName || !mcData.itemsByName[this.itemName]) {
+            "No item found with name " + this.itemName + " in " + JSON.stringify(equipTask);
         }
     }
 
     async onStateEntered() {
-        let [item, place] = Object.entries(this.task)[0];
-
-        let itemNr = mcData.itemsByName[item].id;
+        let itemNr = mcData.itemsByName[this.itemName].id;
 
         try {
-            await this.bot.equip(itemNr, place);
+            await this.bot.equip(itemNr, this.place);
             this.setFinished();
         } catch (err: any) {
             this.setError(err);

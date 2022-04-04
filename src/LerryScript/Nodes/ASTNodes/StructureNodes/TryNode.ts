@@ -5,6 +5,7 @@ import { CompileResult } from "../../../Types/CompileResult";
 import { ASTNode } from "../ASTNode";
 import chalk from "chalk";
 import { Identity } from "../../../Actions/Identity";
+import { createTransition } from "../../../Helper/Helper";
 
 export class TryNode implements ASTNode {
     constructor(public task: ASTNode, public error: ASTNode) {}
@@ -32,18 +33,25 @@ export class TryNode implements ASTNode {
         let taskExit = compiledTask.exit;
         let errorExit = compiledError.exit;
 
-        let enterTask = this.createTransition(startTry, taskEnter, () => true);
-        let leaveTask = this.createTransition(taskExit, endTry, taskExit.isFinished);
+        let enterTask = createTransition(startTry, taskEnter, () => true, "Enter Task");
+        let leaveTask = createTransition(taskExit, endTry, taskExit.isFinished, "Exit from Task");
 
         let enterErrors = [];
         for (let child of compiledTask.actions) {
             if (!child.errorChaught) {
-                enterErrors.push(this.createTransition(child, errorEnter, () => child.isErrored()));
+                enterErrors.push(
+                    createTransition(child, errorEnter, () => child.isErrored(), "Enter Error")
+                );
                 child.errorChaught = true;
             }
         }
 
-        let leaveError = this.createTransition(errorExit, endTry, errorExit.isFinished);
+        let leaveError = createTransition(
+            errorExit,
+            endTry,
+            errorExit.isFinished,
+            "Exit from Error"
+        );
 
         let internalActions: Action[] = [startTry, endTry];
         let internalTransitions: StateTransition[] = [
@@ -90,12 +98,12 @@ export class TryNode implements ASTNode {
         };
     }
 
-    createTransition(from: Action, to: Action, func: () => boolean): StateTransition {
-        return new StateTransition({
-            parent: from,
-            child: to,
-            shouldTransition: func,
-            name: from.stateName + " -> " + to.stateName,
-        });
-    }
+    // createTransition(from: Action, to: Action, func: () => boolean): StateTransition {
+    //     return new StateTransition({
+    //         parent: from,
+    //         child: to,
+    //         shouldTransition: func,
+    //         name: from.stateName + " -> " + to.stateName,
+    //     });
+    // }
 }

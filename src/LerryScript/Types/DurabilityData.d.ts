@@ -1,4 +1,4 @@
-import { Comparison } from "./CompareAttributes";
+import { Comparison } from "./Comparison";
 
 export type DurabilityData = {
     comparison: Comparison;

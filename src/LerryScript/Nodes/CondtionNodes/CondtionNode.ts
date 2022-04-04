@@ -10,4 +10,5 @@ export abstract class ConditionNode implements Node {
     abstract prettyPrint(indent: number): string;
 
     abstract getCondition(bot: Bot): () => boolean;
+    abstract getName(): string;
 }

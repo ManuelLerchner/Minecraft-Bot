@@ -6,6 +6,7 @@ import { Identity } from "../../../Actions/Identity";
 import { CompileResult } from "../../../Types/CompileResult";
 import chalk from "chalk";
 import { ConditionNode } from "../../CondtionNodes/CondtionNode";
+import { createTransition } from "../../../Helper/Helper";
 
 export class WhileNode implements ASTNode {
     constructor(private condition: ConditionNode, public body: ASTNode) {}
@@ -23,28 +24,30 @@ export class WhileNode implements ASTNode {
     }
 
     createInternalStates(bot: Bot, compiledBody: CompileResult) {
-        let startWhile = new Identity(bot, "While-Node");
+        let startWhile = new Identity(bot, "While-Node:" + this.condition.getName());
         let endWhile = new Identity(bot, "End While-Node");
 
         let input = compiledBody.enter;
         let output = compiledBody.exit;
 
-        let remainInLoop = this.createTransition(
+        let enterLoop = createTransition(
             startWhile,
             input,
-            this.condition.getCondition(bot)
+            this.condition.getCondition(bot),
+            "Enter Loop"
         );
 
-        let leaveLoop = this.createTransition(
+        let returnFromLoop = createTransition(
             startWhile,
             endWhile,
             () => !this.condition.getCondition(bot)(),
+            "Return from Loop"
         );
 
-        let loop = this.createTransition(output, startWhile, output.isFinished);
+        let loop = createTransition(output, startWhile, output.isFinished, "Loop");
 
         let internalActions: Action[] = [startWhile, endWhile];
-        let internalTransitions: StateTransition[] = [remainInLoop, loop, leaveLoop];
+        let internalTransitions: StateTransition[] = [enterLoop, loop, returnFromLoop];
 
         return {
             internalActions,
@@ -75,14 +78,5 @@ export class WhileNode implements ASTNode {
             enter,
             exit,
         };
-    }
-
-    createTransition(from: Action, to: Action, func: () => boolean): StateTransition {
-        return new StateTransition({
-            parent: from,
-            child: to,
-            shouldTransition: func,
-            name: from.stateName + " -> " + to.stateName,
-        });
     }
 }

@@ -23,4 +23,8 @@ export class AndNode implements ConditionNode {
     getCondition(bot: Bot): () => boolean {
         return () => this.andNodes.every((andNode) => andNode.getCondition(bot)());
     }
+
+    getName(): string {
+        return this.andNodes.map((node) => node.getName()).join(" and ");
+    }
 }

@@ -13,4 +13,8 @@ export class FunctionCondtionNode implements ConditionNode {
     getCondition(bot: Bot): () => boolean {
         return () => this.func(bot);
     }
+
+    getName(): string {
+        return this.name;
+    }
 }

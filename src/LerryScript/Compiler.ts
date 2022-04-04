@@ -17,7 +17,11 @@ export function compile(rootNode: ASTNode, bot: Bot): CompileResult {
         program.possibleErrors.forEach((error: Action) => {
             console.log("    " + chalk.red(error.stateName));
         });
-        console.log(chalk.yellow("causing the bot to halt, and remain stuck in the same state.\n"));
+        console.log(
+            chalk.yellow(
+                "This could cause the bot to remain stuck in the failed state.\nYou can surround the failed state with a 'try' statement to catch such errors.\n"
+            )
+        );
     }
 
     return program;

@@ -1,3 +1,4 @@
 export type DepositTask = {
-    [itemname: string]: number | "all";
+    itemName: string;
+    amount: number | "all";
 };

@@ -23,4 +23,8 @@ export class OrNode implements ConditionNode {
     getCondition(bot: Bot): () => boolean {
         return () => this.orNodes.some((andNode) => andNode.getCondition(bot)());
     }
+
+    getName(): string {
+        return this.orNodes.map((node) => node.getName()).join(" or ");
+    }
 }

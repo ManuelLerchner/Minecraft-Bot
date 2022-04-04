@@ -18,4 +18,8 @@ export class NotNode implements ConditionNode {
     getCondition(bot: Bot): () => boolean {
         return () => !this.node.getCondition(bot)();
     }
+
+    getName(): string {
+        return `not ${this.node.getName()}`;
+    }
 }

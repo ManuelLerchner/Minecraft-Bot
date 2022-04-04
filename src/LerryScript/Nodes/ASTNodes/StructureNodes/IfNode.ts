@@ -6,12 +6,13 @@ import { CompileResult } from "../../../Types/CompileResult";
 import { ASTNode } from "../ASTNode";
 import { ConditionNode } from "../../CondtionNodes/CondtionNode";
 import chalk from "chalk";
+import { createTransition } from "../../../Helper/Helper";
 
 export class IfNode implements ASTNode {
     constructor(
         public condition: ConditionNode,
-        public trueBranch: ASTNode,
-        public falseBranch?: ASTNode
+        public ifTrue: ASTNode,
+        public ifFalse?: ASTNode
     ) {}
 
     prettyPrint(indent: number): string {
@@ -21,10 +22,10 @@ export class IfNode implements ASTNode {
         str += indentation + chalk.magenta("if (\n");
         str += this.condition.prettyPrint(indent + 1) + "\n";
         str += indentation + chalk.magenta(") do {\n");
-        str += this.trueBranch.prettyPrint(indent + 1) + "\n";
-        if (this.falseBranch) {
+        str += this.ifTrue.prettyPrint(indent + 1) + "\n";
+        if (this.ifFalse) {
             str += indentation + chalk.magenta("} else {\n");
-            str += this.falseBranch.prettyPrint(indent + 1) + "\n";
+            str += this.ifFalse.prettyPrint(indent + 1) + "\n";
             str += indentation + chalk.magenta("}");
         }
 
@@ -36,45 +37,50 @@ export class IfNode implements ASTNode {
         compiledTrueBranch: CompileResult,
         compiledFalseBranch: CompileResult | null
     ) {
-        let startIf = new Identity(bot, "If-Node");
+        let startIf = new Identity(bot, "If-Node:\n" + this.condition.getName());
         let endIf = new Identity(bot, "End If-Node");
 
         let internalActions: Action[] = [startIf, endIf];
         let internalTransitions: StateTransition[] = [];
 
         if (compiledFalseBranch) {
-            let gotoFalseBranch = this.createTransition(
+            let gotoFalseBranch = createTransition(
                 startIf,
                 compiledFalseBranch.enter,
-                () => !this.condition.getCondition(bot)()
+                () => !this.condition.getCondition(bot)(),
+                "Enter False Branch"
             );
 
-            let exitIfFromFalse = this.createTransition(
+            let exitIfFromFalse = createTransition(
                 compiledFalseBranch.exit,
                 endIf,
-                compiledFalseBranch.exit.isFinished
+                compiledFalseBranch.exit.isFinished,
+                "Exit False Branch"
             );
 
             internalTransitions.push(gotoFalseBranch, exitIfFromFalse);
         } else {
-            let gotoEnd = this.createTransition(
+            let gotoEnd = createTransition(
                 startIf,
                 endIf,
-                () => !this.condition.getCondition(bot)()
+                () => !this.condition.getCondition(bot)(),
+                "Exit If-Node dircetly"
             );
             internalTransitions.push(gotoEnd);
         }
 
-        let gotoTrueBranch = this.createTransition(
+        let gotoTrueBranch = createTransition(
             startIf,
             compiledTrueBranch.enter,
-            this.condition.getCondition(bot)
+            this.condition.getCondition(bot),
+            "Enter True Branch"
         );
 
-        let exitIfFromTrue = this.createTransition(
+        let exitIfFromTrue = createTransition(
             compiledTrueBranch.exit,
             endIf,
-            compiledTrueBranch.exit.isFinished
+            compiledTrueBranch.exit.isFinished,
+            "Exit from True Branch"
         );
 
         internalTransitions.push(gotoTrueBranch, exitIfFromTrue);
@@ -88,17 +94,17 @@ export class IfNode implements ASTNode {
     }
 
     compile(bot: Bot): CompileResult {
-        let compiledTrueBranch = this.trueBranch.compile(bot);
+        let compiledTrueBranch = this.ifTrue.compile(bot);
 
         let compiledFalseBranch = null;
-        if (this.falseBranch) {
-            compiledFalseBranch = this.falseBranch.compile(bot);
+        if (this.ifFalse) {
+            compiledFalseBranch = this.ifFalse.compile(bot);
         }
 
-        let internal = this.createInternalStates(bot, compiledTrueBranch, compiledFalseBranch);
+        let internalLogic = this.createInternalStates(bot, compiledTrueBranch, compiledFalseBranch);
 
-        let actions = [...internal.internalActions, ...compiledTrueBranch.actions];
-        let transitions = [...internal.internalTransitions, ...compiledTrueBranch.transitions];
+        let actions = [...internalLogic.internalActions, ...compiledTrueBranch.actions];
+        let transitions = [...internalLogic.internalTransitions, ...compiledTrueBranch.transitions];
 
         let canThrowError = compiledTrueBranch.possibleErrors;
 
@@ -113,17 +119,8 @@ export class IfNode implements ASTNode {
             actions,
             transitions,
             possibleErrors: canThrowError,
-            enter: internal.enter,
-            exit: internal.exit,
+            enter: internalLogic.enter,
+            exit: internalLogic.exit,
         };
-    }
-
-    createTransition(from: Action, to: Action, func: () => boolean): StateTransition {
-        return new StateTransition({
-            parent: from,
-            child: to,
-            shouldTransition: func,
-            name: from.stateName + " -> " + to.stateName,
-        });
     }
 }

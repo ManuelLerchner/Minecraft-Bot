@@ -4,6 +4,7 @@ import { Action } from "../../../Actions/Action";
 import { CompileResult } from "../../../Types/CompileResult";
 import { ASTNode } from "../ASTNode";
 import chalk from "chalk";
+import { createTransition } from "../../../Helper/Helper";
 
 export class SequentialNode implements ASTNode {
     actions: ASTNode[];
@@ -35,7 +36,7 @@ export class SequentialNode implements ASTNode {
             let from = curr.exit || curr.actions[curr.actions.length - 1];
             let to = next.enter || next.actions[0];
 
-            transitions.push(this.createTransition(from, to));
+            transitions.push(createTransition(from, to, from.isFinished, "Action finsihed"));
         }
 
         for (let action of compiledChildren) {
@@ -54,14 +55,5 @@ export class SequentialNode implements ASTNode {
             enter: compiledChildren[0].enter,
             exit: compiledChildren[compiledChildren.length - 1].exit,
         };
-    }
-
-    createTransition(from: Action, to: Action): StateTransition {
-        return new StateTransition({
-            parent: from,
-            child: to,
-            shouldTransition: from.isFinished,
-            name: from.stateName + " -> " + to.stateName,
-        });
     }
 }
