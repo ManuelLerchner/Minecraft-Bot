@@ -1,7 +1,6 @@
-import chalk from "chalk";
 import { Bot } from "mineflayer";
-import { Movements } from "mineflayer-pathfinder";
 import { StateBehavior } from "mineflayer-statemachine";
+import chalk from "chalk";
 
 export abstract class Action implements StateBehavior {
     bot: Bot;
@@ -40,7 +39,7 @@ export abstract class Action implements StateBehavior {
 
     setError(err: Error) {
         console.log(
-            chalk.red("\nDetected: " + err.name + ": " + err.message + " in " + this.stateName)
+            chalk.red("\n" + err.name + ": " + err.message + " in: '" + this.stateName + "'")
         );
         this.error = true;
     }

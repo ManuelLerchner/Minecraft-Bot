@@ -1,19 +1,14 @@
-import { Node } from "./Node";
-import { Vec3 } from "vec3";
-import { GoTo } from "../Actions/GoTo";
-import { goals } from "mineflayer-pathfinder";
-
+import { Node } from "./Nodes";
 import { Bot } from "mineflayer";
 import { Action } from "../Actions/Action";
-
-import { StateBehavior, StateTransition } from "mineflayer-statemachine";
+import { StateTransition } from "mineflayer-statemachine";
 import { CompileResult } from "../Types/CompileResult";
 import chalk from "chalk";
 
 export class SequentialNode implements Node {
     actions: Node[];
-    constructor(...action: Node[]) {
-        this.actions = action;
+    constructor(action: Node, ...actions: Node[]) {
+        this.actions = [action, ...actions];
     }
 
     prettyPrint(indent: number): string {

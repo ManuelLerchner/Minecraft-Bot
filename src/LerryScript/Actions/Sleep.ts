@@ -1,9 +1,5 @@
 import { Action } from "./Action";
-import { StateBehavior } from "mineflayer-statemachine";
-import { Vec3 } from "vec3";
-import { Bot, Chest, Player } from "mineflayer";
-
-import { Movements, goals } from "mineflayer-pathfinder";
+import { Bot } from "mineflayer";
 
 export class Sleep extends Action {
     constructor(bot: Bot, name: string, private msSleep: number) {

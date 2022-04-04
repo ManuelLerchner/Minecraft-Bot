@@ -1,18 +1,20 @@
 import { Action } from "./Action";
-import { StateBehavior } from "mineflayer-statemachine";
 import { Vec3 } from "vec3";
-import { Bot, Chest, Player } from "mineflayer";
-
-import { Movements, goals } from "mineflayer-pathfinder";
+import { Bot } from "mineflayer";
 import { DepositTask } from "../Types/DepositTask";
+import { mcData } from "../projectSettings";
 
-const mcData = require("minecraft-data");
-
-export class DepositToChest extends Action {
-    mcData: any;
-    constructor(bot: Bot, name: string, private pos: Vec3, private itemsToDeposit: DepositTask) {
+export class TakeFromChest extends Action {
+    constructor(bot: Bot, name: string, private pos: Vec3, private itemsToTake: DepositTask) {
         super(bot, name);
-        this.mcData = mcData("1.17");
+
+        for (let [name, amount] of Object.entries(this.itemsToTake)) {
+            let item = mcData.itemsByName[name];
+
+            if (!item) {
+                throw new Error("No item found with name " + name);
+            }
+        }
     }
 
     async onStateEntered() {
@@ -27,20 +29,15 @@ export class DepositToChest extends Action {
 
         let chest = await this.bot.openChest(chestBlock);
 
-        for (let [name, amount] of Object.entries(this.itemsToDeposit)) {
-            let item = this.mcData.itemsByName[name];
+        for (let [name, amount] of Object.entries(this.itemsToTake)) {
+            let item = mcData.itemsByName[name];
 
-            if (!item) {
-                this.setError(new Error("No item found with name " + name));
-                return;
-            }
-
-            let depositAmount = amount;
+            let takeAmount = amount;
             if (amount === "all") {
-                depositAmount = this.bot.inventory.count(item.id, null);
+                takeAmount = chest.count(item.id, null);
             }
             try {
-                await chest.deposit(item.id, item.metadata, depositAmount as number);
+                await chest.withdraw(item.id, item.metadata, takeAmount as number);
             } catch (e: any) {
                 chest.close();
                 this.setError(e);

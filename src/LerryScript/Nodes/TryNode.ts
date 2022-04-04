@@ -1,9 +1,6 @@
-import { TaskNode } from "./TaskNode";
-import { Node } from "./Node";
-import { Vec3 } from "vec3";
+import { Node } from "./Nodes";
 import { Bot } from "mineflayer";
-
-import { StateBehavior, StateTransition } from "mineflayer-statemachine";
+import { StateTransition } from "mineflayer-statemachine";
 import { Action } from "../Actions/Action";
 import { Identity } from "../Actions/Identity";
 import { CompileResult } from "../Types/CompileResult";
