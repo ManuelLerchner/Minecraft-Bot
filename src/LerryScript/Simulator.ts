@@ -9,7 +9,7 @@ import { ASTNode } from "./Nodes/ASTNodes/ASTNode";
 import { compile } from "./Compiler";
 import { pathfinder } from "mineflayer-pathfinder";
 import { CompileResult } from "./Types/CompileResult";
-import { DEBUG } from "./projectSettings";
+import { ENABLE_BOT_DEBUG } from "./Settings";
 
 export function simulate(rootNode: ASTNode, bot: Bot): void {
     bot.loadPlugin(pathfinder);
@@ -31,7 +31,7 @@ function startBot(bot: Bot, program: CompileResult, webserver: StateMachineWebse
         }
     });
 
-    if (DEBUG) {
+    if (ENABLE_BOT_DEBUG) {
         bot.on("spawn", () => {
             bot.chat("DEBUG MODE: ON");
         });

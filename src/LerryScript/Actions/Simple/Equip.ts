@@ -1,7 +1,7 @@
 import { Bot } from "mineflayer";
 import { Action } from "../Action";
 
-import { mcData } from "../../projectSettings";
+import { mcData } from "../../Settings";
 import { EquipTask } from "../../Types/EquipTask";
 import { EquipPosition } from "../../Types/EquipPosition";
 

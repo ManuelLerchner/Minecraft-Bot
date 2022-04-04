@@ -1,5 +1,5 @@
 import { Bot } from "mineflayer";
-import { mcData } from "../../../projectSettings";
+import { mcData } from "../../../Settings";
 import { Comparison } from "../../../Types/Comparison";
 import { DurabilityData } from "../../../Types/DurabilityData";
 import { ConditionNode } from "../CondtionNode";

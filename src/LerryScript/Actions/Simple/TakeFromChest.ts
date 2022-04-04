@@ -2,7 +2,7 @@ import { Bot } from "mineflayer";
 import { Action } from "../Action";
 import { Vec3 } from "vec3";
 import { DepositTask } from "../../Types/DepositTask";
-import { mcData } from "../../projectSettings";
+import { mcData } from "../../Settings";
 
 export class TakeFromChest extends Action {
     itemName: string;

@@ -1,7 +1,7 @@
 import { Bot } from "mineflayer";
 import { StateBehavior } from "mineflayer-statemachine";
 import chalk from "chalk";
-import { PRINT_STATES } from "../projectSettings";
+import { PRINT_ERROR, PRINT_STATES } from "../Settings";
 
 export abstract class Action implements StateBehavior {
     bot: Bot;
@@ -40,9 +40,11 @@ export abstract class Action implements StateBehavior {
     }
 
     setError(err: Error) {
-        console.log(
-            chalk.red("\n" + err.name + ": " + err.message + " in: '" + this.stateName + "'")
-        );
+        if (PRINT_ERROR) {
+            console.log(
+                chalk.red("\n" + err.name + ": " + err.message + " in: '" + this.stateName + "'")
+            );
+        }
         this.error = true;
     }
 
