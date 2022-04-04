@@ -18,40 +18,35 @@ const bot: mineflayer.Bot = mineflayer.createBot({
     username: "LerryBot",
 });
 
-////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////
-
-let pickaxeHasMoreThan10Durability: ConditionNode = new InventoryConditionNode(
-    "exactly",
+let hasPickaxeWithMoreThan10Durability: ConditionNode = new InventoryConditionNode(
+    "atleast",
     1,
     "wooden_pickaxe",
     {
-        comparison: "more than",
+        comparison: "more_than",
         durability: 10,
     }
 );
 
-let hasLessThan10Cobble: ConditionNode = new InventoryConditionNode("less than", 10, "cobblestone");
-
-////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////
+let hasLessThan10Cobble: ConditionNode = new InventoryConditionNode("atmost", 10, "cobblestone");
 
 let rootNode: ASTNode = new WhileNode(
     new FunctionCondtionNode("infinite repeat", () => true),
     new SequentialNode(
         new IfNode(
-            new InventoryConditionNode("exactly", 1, "wooden_pickaxe"),
+            new InventoryConditionNode("atleast", 1, "wooden_pickaxe"),
             new SequentialNode(
                 new TaskNode("equip", "wooden_pickaxe to hand", {
-                    wooden_pickaxe: "hand",
+                    itemName: "wooden_pickaxe",
+                    place: "hand",
                 }),
                 new IfNode(
-                    pickaxeHasMoreThan10Durability,
+                    hasPickaxeWithMoreThan10Durability,
                     new SequentialNode(
                         new TaskNode("goto", "cobble farm", new Vec3(214, 64, 181)),
 
                         new WhileNode(
-                            new AndNode(hasLessThan10Cobble, pickaxeHasMoreThan10Durability),
+                            new AndNode(hasLessThan10Cobble, hasPickaxeWithMoreThan10Durability),
                             new TaskNode("mine", "cobble", new Vec3(215, 65, 181))
                         ),
 
@@ -59,7 +54,8 @@ let rootNode: ASTNode = new WhileNode(
 
                         new TryNode(
                             new TaskNode("deposit", "all cobblestone", new Vec3(219, 64, 175), {
-                                cobblestone: "all",
+                                itemName: "cobblestone",
+                                amount: "all",
                             }),
                             new TaskNode("idle", "because chest is full")
                         ),
@@ -70,7 +66,8 @@ let rootNode: ASTNode = new WhileNode(
                         new TaskNode("goto", "used pickaxes chest", new Vec3(217, 64, 171)),
 
                         new TaskNode("deposit", "used wooden pickaxe", new Vec3(219, 64, 171), {
-                            wooden_pickaxe: 1,
+                            itemName: "wooden_pickaxe",
+                            amount: 1,
                         })
                     )
                 )
@@ -80,7 +77,8 @@ let rootNode: ASTNode = new WhileNode(
 
                 new TryNode(
                     new TaskNode("take", "take pickaxe", new Vec3(219, 64, 173), {
-                        wooden_pickaxe: 1,
+                        itemName: "wooden_pickaxe",
+                        amount: 1,
                     }),
                     new TaskNode("sleep", "because there no pickaxe in chest", 5000)
                 )
