@@ -9,6 +9,7 @@ import { ASTNode } from "./Nodes/ASTNodes/ASTNode";
 import { compile } from "./Compiler";
 import { pathfinder } from "mineflayer-pathfinder";
 import { CompileResult } from "./Types/CompileResult";
+import { DEBUG } from "./projectSettings";
 
 export function simulate(rootNode: ASTNode, bot: Bot): void {
     bot.loadPlugin(pathfinder);
@@ -21,8 +22,6 @@ export function simulate(rootNode: ASTNode, bot: Bot): void {
 
 function startBot(bot: Bot, program: CompileResult, webserver: StateMachineWebserver | null): void {
     bot.on("spawn", () => {
-        bot.chat("Hello, I'm LerryBot!");
-
         const NSM = new NestedStateMachine(program.transitions, program.enter);
         const stateMachine = new BotStateMachine(bot, NSM);
 
@@ -32,11 +31,24 @@ function startBot(bot: Bot, program: CompileResult, webserver: StateMachineWebse
         }
     });
 
-    bot.on("death", () => {
-        bot.chat("I died!");
-    });
+    if (DEBUG) {
+        bot.on("spawn", () => {
+            bot.chat("DEBUG MODE: ON");
+        });
 
-    bot.on("error", (err) => {
-        console.log(err);
-    });
+        bot.on("error", (err) => {
+            console.log(err);
+        });
+
+        bot.on("chat", (username, message) => {
+            if (message === "drop items") {
+                bot.chat("dropping items");
+                (function tossNext() {
+                    if (bot.inventory.items().length === 0) return;
+                    const item = bot.inventory.items()[0];
+                    bot.tossStack(item, tossNext);
+                })();
+            }
+        });
+    }
 }
