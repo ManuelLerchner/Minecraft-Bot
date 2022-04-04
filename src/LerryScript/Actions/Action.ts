@@ -1,6 +1,7 @@
 import { Bot } from "mineflayer";
 import { StateBehavior } from "mineflayer-statemachine";
 import chalk from "chalk";
+import { PRINT_STATES } from "../projectSettings";
 
 export abstract class Action implements StateBehavior {
     bot: Bot;
@@ -22,6 +23,7 @@ export abstract class Action implements StateBehavior {
         this.setFinished = this.setFinished.bind(this);
         this.setError = this.setError.bind(this);
         this.isErrored = this.isErrored.bind(this);
+        this.onStateExited = this.onStateExited.bind(this);
     }
 
     reset() {
@@ -48,8 +50,14 @@ export abstract class Action implements StateBehavior {
         return this.error;
     }
 
+    onStateExited() {
+        if (PRINT_STATES) {
+            console.log(chalk.green("\n" + this.stateName + " finished"));
+        }
+        this.reset();
+    }
+
     abstract onStateEntered(): void;
-    abstract onStateExited(): void;
 
     abstract canThrowError(): boolean;
 }

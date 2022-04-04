@@ -4,8 +4,9 @@ import { Action } from "../../../Actions/Action";
 import { CompileResult } from "../../../Types/CompileResult";
 import { ASTNode } from "../ASTNode";
 import chalk from "chalk";
-import { Identity } from "../../../Actions/Identity";
-import { createTransition } from "../../../Helper/Helper";
+
+import { createTransition } from "../../../Transitions/Transitions";
+import { Identity } from "../../../Actions/Simple/Identity";
 
 export class TryNode implements ASTNode {
     constructor(public task: ASTNode, public error: ASTNode) {}
@@ -38,7 +39,7 @@ export class TryNode implements ASTNode {
 
         let enterErrors = [];
         for (let child of compiledTask.actions) {
-            if (!child.errorChaught) {
+            if (!child.errorChaught && child.canThrowError()) {
                 enterErrors.push(
                     createTransition(child, errorEnter, () => child.isErrored(), "Enter Error")
                 );

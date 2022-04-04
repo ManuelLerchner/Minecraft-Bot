@@ -1,5 +1,6 @@
-import { Action } from "./Action";
+
 import { Bot } from "mineflayer";
+import { Action } from "../Action";
 
 export class IdleState extends Action {
     constructor(bot: Bot, errorMsg: string) {
@@ -7,8 +8,6 @@ export class IdleState extends Action {
     }
 
     onStateEntered(): void {}
-
-    onStateExited(): void {}
 
     canThrowError(): boolean {
         return false;

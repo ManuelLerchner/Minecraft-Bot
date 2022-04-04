@@ -1,12 +1,12 @@
 import { Bot } from "mineflayer";
 import { StateTransition } from "mineflayer-statemachine";
 import { Action } from "../../../Actions/Action";
-import { Identity } from "../../../Actions/Identity";
+import { Identity } from "../../../Actions/Simple/Identity";
 import { CompileResult } from "../../../Types/CompileResult";
 import { ASTNode } from "../ASTNode";
 import { ConditionNode } from "../../CondtionNodes/CondtionNode";
 import chalk from "chalk";
-import { createTransition } from "../../../Helper/Helper";
+import { createTransition } from "../../../Transitions/Transitions";
 
 export class IfNode implements ASTNode {
     constructor(

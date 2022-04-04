@@ -6,23 +6,38 @@ import { ASTNode } from "../ASTNode";
 import chalk from "chalk";
 import { Vec3 } from "vec3";
 
-import { IdleState } from "../../../Actions/IdleState";
-import { GoTo } from "../../../Actions/GoTo";
-import { Mine } from "../../../Actions/Mine";
-import { Sleep } from "../../../Actions/Sleep";
-import { Function } from "../../../Actions/Function";
-import { Equip } from "../../../Actions/Equip";
-import { DepositToChest } from "../../../Actions/DepositToChest";
-import { TakeFromChest } from "../../../Actions/TakeFromChest";
 import { DepositTask } from "../../../Types/DepositTask";
 import { EquipTask } from "../../../Types/EquipTask";
+import { DepositToChest } from "../../../Actions/Simple/DepositToChest";
+import { Equip } from "../../../Actions/Simple/Equip";
+import { GoTo } from "../../../Actions/Simple/GoTo";
+import { IdleState } from "../../../Actions/Simple/IdleState";
+import { Mine } from "../../../Actions/Simple/Mine";
+import { Sleep } from "../../../Actions/Simple/Sleep";
+import { TakeFromChest } from "../../../Actions/Simple/TakeFromChest";
+import { Call } from "../../../Actions/Simple/Call";
+import { Chat } from "../../../Actions/Simple/Chat";
+import { ActivateHotbarIcon } from "../../../Actions/Simple/ActivateHotbarIcon";
+import { ClickInventory } from "../../../Actions/Simple/ClickInventory";
 
 export class TaskNode implements ASTNode {
     params: any[] = [];
     taskName: string;
 
     constructor(
-        private action: "goto" | "mine" | "sleep" | "call" | "deposit" | "take" | "idle" | "equip",
+        private action:
+            | "goto"
+            | "mine"
+            | "sleep"
+            | "call"
+            | "deposit"
+            | "take"
+            | "idle"
+            | "equip"
+            | "chat"
+            | "activateHotbarItem"
+            | "clickInventory",
+
         private name: string,
         ...params: any[]
     ) {
@@ -85,7 +100,7 @@ export class TaskNode implements ASTNode {
                 case "call":
                     if (typeof firstParam !== "function")
                         throw new Error("Invalid function:" + firstParam);
-                    return new Function(bot, this.taskName, firstParam);
+                    return new Call(bot, this.taskName, firstParam);
 
                 case "equip":
                     let equipTask: EquipTask = firstParam as EquipTask;
@@ -99,6 +114,16 @@ export class TaskNode implements ASTNode {
                         );
 
                     return new Equip(bot, this.taskName, equipTask);
+
+                case "chat":
+                    if (typeof firstParam !== "string")
+                        throw new Error("Invalid chat message:" + firstParam);
+                    return new Chat(bot, this.taskName, firstParam);
+
+                case "activateHotbarItem":
+                    if (typeof firstParam !== "number")
+                        throw new Error("Invalid hotbar idx:" + firstParam);
+                    return new ActivateHotbarIcon(bot, this.taskName, firstParam);
             }
         }
 
@@ -138,6 +163,15 @@ export class TaskNode implements ASTNode {
                         throw new Error("Invalid position: " + firstParam);
 
                     return new TakeFromChest(bot, this.taskName, firstParam, secondParam);
+
+                case "clickInventory":
+                    if (!(firstParam === "left" || firstParam === "right"))
+                        throw new Error("Invalid click: " + firstParam);
+
+                    if (typeof secondParam !== "number")
+                        throw new Error("Invalid slot idx: " + secondParam);
+
+                    return new ClickInventory(bot, this.taskName, firstParam, secondParam);
             }
         }
 

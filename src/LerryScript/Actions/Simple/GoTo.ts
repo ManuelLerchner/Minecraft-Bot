@@ -1,7 +1,8 @@
-import { Action } from "./Action";
+
 import { Vec3 } from "vec3";
 import { Bot } from "mineflayer";
 import { goals } from "mineflayer-pathfinder";
+import { Action } from "../Action";
 
 export class GoTo extends Action {
     goal: goals.GoalXZ;
@@ -17,10 +18,6 @@ export class GoTo extends Action {
         } catch (err: any) {
             this.setError(err);
         }
-    }
-
-    onStateExited(): void {
-        this.reset();
     }
 
     canThrowError(): boolean {

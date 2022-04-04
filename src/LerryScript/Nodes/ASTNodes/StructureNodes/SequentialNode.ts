@@ -4,7 +4,7 @@ import { Action } from "../../../Actions/Action";
 import { CompileResult } from "../../../Types/CompileResult";
 import { ASTNode } from "../ASTNode";
 import chalk from "chalk";
-import { createTransition } from "../../../Helper/Helper";
+import { createTransition } from "../../../Transitions/Transitions";
 
 export class SequentialNode implements ASTNode {
     actions: ASTNode[];

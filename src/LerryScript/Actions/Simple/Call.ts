@@ -1,7 +1,7 @@
-import { Action } from "./Action";
 import { Bot } from "mineflayer";
+import { Action } from "../Action";
 
-export class Function extends Action {
+export class Call extends Action {
     constructor(bot: Bot, name: string, private func: () => void) {
         super(bot, name);
     }
@@ -9,10 +9,6 @@ export class Function extends Action {
     onStateEntered(): void {
         this.func();
         this.setFinished();
-    }
-
-    onStateExited(): void {
-        this.reset();
     }
 
     canThrowError(): boolean {

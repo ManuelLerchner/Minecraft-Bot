@@ -2,11 +2,11 @@ import { ASTNode } from "../ASTNode";
 import { Bot } from "mineflayer";
 import { StateTransition } from "mineflayer-statemachine";
 import { Action } from "../../../Actions/Action";
-import { Identity } from "../../../Actions/Identity";
+import { Identity } from "../../../Actions/Simple/Identity";
 import { CompileResult } from "../../../Types/CompileResult";
 import chalk from "chalk";
 import { ConditionNode } from "../../CondtionNodes/CondtionNode";
-import { createTransition } from "../../../Helper/Helper";
+import { createTransition } from "../../../Transitions/Transitions";
 
 export class WhileNode implements ASTNode {
     constructor(private condition: ConditionNode, public body: ASTNode) {}
@@ -41,7 +41,7 @@ export class WhileNode implements ASTNode {
             startWhile,
             endWhile,
             () => !this.condition.getCondition(bot)(),
-            "Return from Loop"
+            "Exit while"
         );
 
         let loop = createTransition(output, startWhile, output.isFinished, "Loop");

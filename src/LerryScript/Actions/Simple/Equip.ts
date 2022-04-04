@@ -1,8 +1,9 @@
-import { Action } from "./Action";
 import { Bot } from "mineflayer";
-import { EquipTask } from "../Types/EquipTask";
-import { mcData } from "../projectSettings";
-import { EquipPosition } from "../Types/EquipPosition";
+import { Action } from "../Action";
+
+import { mcData } from "../../projectSettings";
+import { EquipTask } from "../../Types/EquipTask";
+import { EquipPosition } from "../../Types/EquipPosition";
 
 export class Equip extends Action {
     itemName: string;
@@ -28,10 +29,6 @@ export class Equip extends Action {
         } catch (err: any) {
             this.setError(err);
         }
-    }
-
-    onStateExited(): void {
-        this.reset();
     }
 
     canThrowError(): boolean {

@@ -1,5 +1,5 @@
-import { Action } from "./Action";
 import { Bot } from "mineflayer";
+import { Action } from "../Action";
 
 export class Sleep extends Action {
     constructor(bot: Bot, name: string, private msSleep: number) {
@@ -10,10 +10,6 @@ export class Sleep extends Action {
         this.sleep(this.msSleep).then(() => {
             this.setFinished();
         });
-    }
-
-    onStateExited(): void {
-        super.reset();
     }
 
     sleep(time: any): Promise<void> {

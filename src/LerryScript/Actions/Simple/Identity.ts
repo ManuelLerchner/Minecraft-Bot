@@ -1,15 +1,15 @@
-import { Action } from "./Action";
-import { Bot} from "mineflayer";
+
+import { Bot } from "mineflayer";
+import { Action } from "../Action";
 
 export class Identity extends Action {
     constructor(bot: Bot, name: string) {
         super(bot, name);
-        this.setFinished();
     }
 
-    onStateEntered(): void {}
-
-    onStateExited(): void {}
+    onStateEntered(): void {
+        this.setFinished();
+    }
 
     canThrowError(): boolean {
         return false;

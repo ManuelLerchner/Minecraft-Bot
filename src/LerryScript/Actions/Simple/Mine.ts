@@ -1,6 +1,7 @@
-import { Action } from "./Action";
+
 import { Vec3 } from "vec3";
 import { Bot } from "mineflayer";
+import { Action } from "../Action";
 
 export class Mine extends Action {
     constructor(bot: Bot, name: string, private pos: Vec3) {
@@ -28,10 +29,6 @@ export class Mine extends Action {
         } catch (err: any) {
             this.setError(err);
         }
-    }
-
-    onStateExited(): void {
-        this.reset();
     }
 
     canThrowError(): boolean {

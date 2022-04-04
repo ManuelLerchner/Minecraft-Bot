@@ -1,8 +1,8 @@
-import { Action } from "./Action";
-import { Vec3 } from "vec3";
 import { Bot } from "mineflayer";
-import { DepositTask } from "../Types/DepositTask";
-import { mcData } from "../projectSettings";
+import { Action } from "../Action";
+import { Vec3 } from "vec3";
+import { DepositTask } from "../../Types/DepositTask";
+import { mcData } from "../../projectSettings";
 
 export class DepositToChest extends Action {
     itemName: string;
@@ -50,10 +50,6 @@ export class DepositToChest extends Action {
 
         this.setFinished();
         chest.close();
-    }
-
-    onStateExited(): void {
-        this.reset();
     }
 
     canThrowError(): boolean {
