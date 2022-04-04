@@ -1,23 +1,23 @@
 {
-  "name": "skyblockprojektv2",
-  "version": "1.0.0",
-  "description": "",
-  "main": "test.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "chalk": "^2.4.1",
-    "discord.js": "^13.3.0",
-    "mineflayer": "^3.11.2",
-    "mineflayer-pathfinder": "^1.8.0",
-    "mineflayer-statemachine": "^1.6.4",
-    "prismarine-viewer": "^1.20.0"
-  },
-  "devDependencies": {
-    "ts-node": "^10.4.0",
-    "typescript": "^4.4.4"
-  }
+    "name": "mineflayer-compiler",
+    "version": "1.0.0",
+    "description": "",
+    "main": "test.js",
+    "scripts": {
+        "dev": "nodemon src/main.ts"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "chalk": "^2.4.1",
+        "mineflayer": "^3.11.2",
+        "mineflayer-pathfinder": "^1.8.0",
+        "mineflayer-statemachine": "^1.6.4",
+        "prismarine-viewer": "^1.20.0",
+        "vec3": "^0.1.7"
+    },
+    "devDependencies": {
+        "ts-node": "^10.4.0",
+        "typescript": "^4.4.4"
+    }
 }

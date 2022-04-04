@@ -1,4 +1,4 @@
-import * as mineflayer from "mineflayer";
+import { Bot, createBot } from "mineflayer";
 import { Vec3 } from "vec3";
 import { simulate } from "../src/LerryScript/Simulator";
 import { ASTNode } from "./LerryScript/Nodes/ASTNodes/ASTNode";
@@ -14,7 +14,7 @@ import { FunctionCondtionNode } from "./LerryScript/Nodes/CondtionNodes/Condtiti
 import { InventoryConditionNode } from "./LerryScript/Nodes/CondtionNodes/Condtitions/InventoryConditionNode";
 import { RunParkour } from "./LerryScript/Templates/RunParkour";
 
-const bot: mineflayer.Bot = mineflayer.createBot({
+const bot: Bot = createBot({
     host: "localhost",
     username: "LerryBot",
 });

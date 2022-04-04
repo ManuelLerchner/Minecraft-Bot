@@ -46,7 +46,8 @@ function startBot(bot: Bot, program: CompileResult, webserver: StateMachineWebse
                 (function tossNext() {
                     if (bot.inventory.items().length === 0) return;
                     const item = bot.inventory.items()[0];
-                    bot.tossStack(item, tossNext);
+                    bot.tossStack(item);
+                    tossNext();
                 })();
             }
         });
