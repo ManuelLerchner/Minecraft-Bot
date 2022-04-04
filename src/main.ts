@@ -47,7 +47,10 @@ let rootNode: ASTNode = new WhileNode(
 
                         new WhileNode(
                             new AndNode(hasLessThan10Cobble, hasPickaxeWithMoreThan10Durability),
-                            new TaskNode("mine", "cobble", new Vec3(215, 65, 181))
+                            new SequentialNode(
+                                new TaskNode("mine", "cobble 1", new Vec3(215, 65, 181)),
+                                new TaskNode("mine", "cobble 2", new Vec3(214, 65, 180))
+                            )
                         ),
 
                         new TaskNode("goto", "cobblestone chest", new Vec3(219, 64, 175)),
