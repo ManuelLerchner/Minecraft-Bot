@@ -5,12 +5,12 @@ import {
     StateMachineWebserver,
 } from "mineflayer-statemachine";
 
-import { Node } from "./Nodes/Nodes";
+import { ASTNode } from "./Nodes/ASTNodes/ASTNode";
 import { compile } from "./Compiler";
 import { pathfinder } from "mineflayer-pathfinder";
 import { CompileResult } from "./Types/CompileResult";
 
-export function simulate(rootNode: Node, bot: Bot): void {
+export function simulate(rootNode: ASTNode, bot: Bot): void {
     bot.loadPlugin(pathfinder);
 
     let program = compile(rootNode, bot);

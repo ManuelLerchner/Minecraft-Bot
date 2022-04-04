@@ -1,16 +1,17 @@
 import * as mineflayer from "mineflayer";
 import { Vec3 } from "vec3";
-import {
-    IfNode,
-    Node,
-    SequentialNode,
-    TaskNode,
-    TryNode,
-    WhileNode,
-} from "../src/LerryScript/Nodes/Nodes";
-
 import { simulate } from "../src/LerryScript/Simulator";
-import { mcData } from "./LerryScript/projectSettings";
+import { ASTNode } from "./LerryScript/Nodes/ASTNodes/ASTNode";
+import { IfNode } from "./LerryScript/Nodes/ASTNodes/StructureNodes/IfNode";
+import { SequentialNode } from "./LerryScript/Nodes/ASTNodes/StructureNodes/SequentialNode";
+import { TaskNode } from "./LerryScript/Nodes/ASTNodes/StructureNodes/TaskNode";
+import { TryNode } from "./LerryScript/Nodes/ASTNodes/StructureNodes/TryNode";
+import { WhileNode } from "./LerryScript/Nodes/ASTNodes/StructureNodes/WhileNode";
+import { AndNode } from "./LerryScript/Nodes/CondtionNodes/Boolean/AndNode";
+import { ConditionNode } from "./LerryScript/Nodes/CondtionNodes/CondtionNode";
+
+import { FunctionCondtionNode } from "./LerryScript/Nodes/CondtionNodes/Condtitions/FunctionConditionNode";
+import { InventoryConditionNode } from "./LerryScript/Nodes/CondtionNodes/Condtitions/InventoryConditionNode";
 
 const bot: mineflayer.Bot = mineflayer.createBot({
     host: "localhost",
@@ -19,36 +20,27 @@ const bot: mineflayer.Bot = mineflayer.createBot({
 
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
+
+let pickaxeHasMoreThan10Durability: ConditionNode = new InventoryConditionNode(
+    "exactly",
+    1,
+    "wooden_pickaxe",
+    {
+        comparison: "more than",
+        durability: 10,
+    }
+);
+
+let hasLessThan10Cobble: ConditionNode = new InventoryConditionNode("less than", 10, "cobblestone");
+
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 
-const infiniteRepeat = () => true;
-
-const hasLessThan10Cobble = () => {
-    let cobble = bot.inventory.items().find((item) => item.name === "cobblestone");
-    return !cobble || cobble.count < 10;
-};
-
-function hasPickaxe() {
-    let hasPickaxe = bot.inventory.items().find((item) => item.name === "wooden_pickaxe");
-    return !!hasPickaxe;
-}
-
-function pickaxeHasMoreThan10Durability() {
-    let pickaxe = bot.inventory.items().find((item) => item.name === "wooden_pickaxe");
-
-    if (!pickaxe) return false;
-
-    let mcDataPickaxe = mcData.itemsByName.wooden_pickaxe;
-    let remaining = mcDataPickaxe.maxDurability - pickaxe.durabilityUsed;
-    return remaining > 10;
-}
-
-let rootNode: Node = new WhileNode(
-    infiniteRepeat,
+let rootNode: ASTNode = new WhileNode(
+    new FunctionCondtionNode("infinite repeat", () => true),
     new SequentialNode(
         new IfNode(
-            hasPickaxe,
+            new InventoryConditionNode("exactly", 1, "wooden_pickaxe"),
             new SequentialNode(
                 new TaskNode("equip", "wooden_pickaxe to hand", {
                     wooden_pickaxe: "hand",
@@ -59,7 +51,7 @@ let rootNode: Node = new WhileNode(
                         new TaskNode("goto", "cobble farm", new Vec3(214, 64, 181)),
 
                         new WhileNode(
-                            () => hasLessThan10Cobble() && pickaxeHasMoreThan10Durability(),
+                            new AndNode(hasLessThan10Cobble, pickaxeHasMoreThan10Durability),
                             new TaskNode("mine", "cobble", new Vec3(215, 65, 181))
                         ),
 

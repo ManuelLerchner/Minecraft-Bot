@@ -1,31 +1,25 @@
-import { Node } from "./Nodes";
 import { Bot } from "mineflayer";
 import { StateTransition } from "mineflayer-statemachine";
-import { Action } from "../Actions/Action";
-import { Identity } from "../Actions/Identity";
-import { CompileResult } from "../Types/CompileResult";
+import { Action } from "../../../Actions/Action";
+import { Identity } from "../../../Actions/Identity";
+import { CompileResult } from "../../../Types/CompileResult";
+import { ASTNode } from "../ASTNode";
+import { ConditionNode } from "../../CondtionNodes/CondtionNode";
 import chalk from "chalk";
 
-export class IfNode implements Node {
+export class IfNode implements ASTNode {
     constructor(
-        public condition: () => boolean,
-        public trueBranch: Node,
-        public falseBranch?: Node
+        public condition: ConditionNode,
+        public trueBranch: ASTNode,
+        public falseBranch?: ASTNode
     ) {}
 
     prettyPrint(indent: number): string {
         let indentation = " ".repeat(indent * 4);
-        let functionIndent = indentation + "  ";
         let str = "";
 
-        let functionPretty = this.condition
-            .toString()
-            .split("\n")
-            .map((line) => functionIndent + line)
-            .join("\n");
-
         str += indentation + chalk.magenta("if (\n");
-        str += functionPretty + "\n";
+        str += this.condition.prettyPrint(indent + 1) + "\n";
         str += indentation + chalk.magenta(") do {\n");
         str += this.trueBranch.prettyPrint(indent + 1) + "\n";
         if (this.falseBranch) {
@@ -52,7 +46,7 @@ export class IfNode implements Node {
             let gotoFalseBranch = this.createTransition(
                 startIf,
                 compiledFalseBranch.enter,
-                () => !this.condition()
+                () => !this.condition.getCondition(bot)()
             );
 
             let exitIfFromFalse = this.createTransition(
@@ -63,12 +57,18 @@ export class IfNode implements Node {
 
             internalTransitions.push(gotoFalseBranch, exitIfFromFalse);
         } else {
-            let gotoEnd = this.createTransition(startIf, endIf, () => !this.condition());
+            let gotoEnd = this.createTransition(
+                startIf,
+                endIf,
+                () => !this.condition.getCondition(bot)()
+            );
             internalTransitions.push(gotoEnd);
         }
 
-        let gotoTrueBranch = this.createTransition(startIf, compiledTrueBranch.enter, () =>
-            this.condition()
+        let gotoTrueBranch = this.createTransition(
+            startIf,
+            compiledTrueBranch.enter,
+            this.condition.getCondition(bot)
         );
 
         let exitIfFromTrue = this.createTransition(

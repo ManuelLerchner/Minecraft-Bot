@@ -1,20 +1,21 @@
-import { Node } from "./Nodes";
-import { Vec3 } from "vec3";
-import { GoTo } from "../Actions/GoTo";
 import { Bot } from "mineflayer";
-import { Action } from "../Actions/Action";
 import { StateTransition } from "mineflayer-statemachine";
-import { IdleState } from "../Actions/IdleState";
-import { Sleep } from "../Actions/Sleep";
-import { Function } from "../Actions/Function";
-import { Mine } from "../Actions/Mine";
-import { DepositToChest } from "../Actions/DepositToChest";
-import { TakeFromChest } from "../Actions/TakeFromChest";
-import { Equip } from "../Actions/Equip";
-import { CompileResult } from "../Types/CompileResult";
+import { Action } from "../../../Actions/Action";
+import { CompileResult } from "../../../Types/CompileResult";
+import { ASTNode } from "../ASTNode";
 import chalk from "chalk";
+import { Vec3 } from "vec3";
 
-export class TaskNode implements Node {
+import { IdleState } from "../../../Actions/IdleState";
+import { GoTo } from "../../../Actions/GoTo";
+import { Mine } from "../../../Actions/Mine";
+import { Sleep } from "../../../Actions/Sleep";
+import { Function } from "../../../Actions/Function";
+import { Equip } from '../../../Actions/Equip';
+import { DepositToChest } from '../../../Actions/DepositToChest';
+import { TakeFromChest } from '../../../Actions/TakeFromChest';
+
+export class TaskNode implements ASTNode {
     params: any[] = [];
     taskName: string;
 

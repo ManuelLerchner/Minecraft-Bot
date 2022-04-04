@@ -1,13 +1,13 @@
-import { Node } from "./Nodes";
 import { Bot } from "mineflayer";
 import { StateTransition } from "mineflayer-statemachine";
-import { Action } from "../Actions/Action";
-import { Identity } from "../Actions/Identity";
-import { CompileResult } from "../Types/CompileResult";
+import { Action } from "../../../Actions/Action";
+import { CompileResult } from "../../../Types/CompileResult";
+import { ASTNode } from "../ASTNode";
 import chalk from "chalk";
+import { Identity } from "../../../Actions/Identity";
 
-export class TryNode implements Node {
-    constructor(public task: Node, public error: Node) {}
+export class TryNode implements ASTNode {
+    constructor(public task: ASTNode, public error: ASTNode) {}
 
     prettyPrint(indent: number): string {
         let indentation = " ".repeat(indent * 4);

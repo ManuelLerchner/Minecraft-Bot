@@ -1,13 +1,13 @@
-import { Node } from "./Nodes";
 import { Bot } from "mineflayer";
-import { Action } from "../Actions/Action";
 import { StateTransition } from "mineflayer-statemachine";
-import { CompileResult } from "../Types/CompileResult";
+import { Action } from "../../../Actions/Action";
+import { CompileResult } from "../../../Types/CompileResult";
+import { ASTNode } from "../ASTNode";
 import chalk from "chalk";
 
-export class SequentialNode implements Node {
-    actions: Node[];
-    constructor(action: Node, ...actions: Node[]) {
+export class SequentialNode implements ASTNode {
+    actions: ASTNode[];
+    constructor(action: ASTNode, ...actions: ASTNode[]) {
         this.actions = [action, ...actions];
     }
 

@@ -1,11 +1,11 @@
 import chalk from "chalk";
 import { Bot } from "mineflayer";
-import { Node } from "./Nodes/Nodes";
+import { ASTNode } from "./Nodes/ASTNodes/ASTNode";
 
 import { Action } from "./Actions/Action";
 import { CompileResult } from "./Types/CompileResult";
 
-export function compile(rootNode: Node, bot: Bot): CompileResult {
+export function compile(rootNode: ASTNode, bot: Bot): CompileResult {
     let program: CompileResult = rootNode.compile(bot);
 
     console.log("\n" + rootNode.prettyPrint(0));

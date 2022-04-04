@@ -1,27 +1,21 @@
-import { Node } from "./Nodes";
+import { ASTNode } from "../ASTNode";
 import { Bot } from "mineflayer";
 import { StateTransition } from "mineflayer-statemachine";
-import { Action } from "../Actions/Action";
-import { Identity } from "../Actions/Identity";
-import { CompileResult } from "../Types/CompileResult";
+import { Action } from "../../../Actions/Action";
+import { Identity } from "../../../Actions/Identity";
+import { CompileResult } from "../../../Types/CompileResult";
 import chalk from "chalk";
+import { ConditionNode } from "../../CondtionNodes/CondtionNode";
 
-export class WhileNode implements Node {
-    constructor(public condition: () => boolean, public body: Node) {}
+export class WhileNode implements ASTNode {
+    constructor(private condition: ConditionNode, public body: ASTNode) {}
 
     prettyPrint(indent: number): string {
         let indentation = " ".repeat(indent * 4);
-        let functionIndent = indentation + "  ";
         let str = "";
 
-        let functionPretty = this.condition
-            .toString()
-            .split("\n")
-            .map((line) => functionIndent + line)
-            .join("\n");
-
         str += indentation + chalk.yellow("while (\n");
-        str += functionPretty + "\n";
+        str += this.condition.prettyPrint(indent + 1) + "\n";
         str += indentation + chalk.yellow(") do {\n");
         str += this.body.prettyPrint(indent + 1) + "\n";
         str += indentation + chalk.yellow("}");
@@ -35,9 +29,17 @@ export class WhileNode implements Node {
         let input = compiledBody.enter;
         let output = compiledBody.exit;
 
-        let remainInLoop = this.createTransition(startWhile, input, () => this.condition());
+        let remainInLoop = this.createTransition(
+            startWhile,
+            input,
+            this.condition.getCondition(bot)
+        );
 
-        let leaveLoop = this.createTransition(startWhile, endWhile, () => !this.condition());
+        let leaveLoop = this.createTransition(
+            startWhile,
+            endWhile,
+            () => !this.condition.getCondition(bot)(),
+        );
 
         let loop = this.createTransition(output, startWhile, output.isFinished);
 
