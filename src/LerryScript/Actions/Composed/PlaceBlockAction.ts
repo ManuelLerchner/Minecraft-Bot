@@ -22,7 +22,7 @@ export class PlaceBlockAction extends Action {
     async onStateEntered() {
         try {
             await this.bot.pathfinder.goto(
-                new goals.GoalNear(this.referencePos.x, this.referencePos.y, this.referencePos.z, 3)
+                new goals.GoalNear(this.referencePos.x, this.referencePos.y, this.referencePos.z, 4)
             );
 
             let itemNr = mcData.itemsByName[this.itemName].id;

@@ -31,6 +31,7 @@ import { NotNode } from "./LerryScript/Nodes/CondtionNodes/Boolean/NotNode";
 import { IgnoreErrorNode } from "./LerryScript/Nodes/ASTNodes/SyntacticSugar/IgnoreErrorNode";
 import { farmCobbleNode } from "./LerryScript/Templates/FarmCobble";
 import { farmWoodNode } from "./LerryScript/Templates/FarmWood";
+import { RunParkour } from "./LerryScript/Templates/RunParkour";
 
 const bot: Bot = createBot({
     host: "localhost",
@@ -39,7 +40,10 @@ const bot: Bot = createBot({
 
 let rootNode: ASTNode = new WhileNode(
     new FunctionCondtionNode("infinite repeat", () => true),
-    new TryNode(new SequentialNode(farmWoodNode, farmCobbleNode), new SleepNode("sleep", 5000))
+    new TryNode(
+        new SequentialNode(farmCobbleNode, farmWoodNode, RunParkour),
+        new SleepNode("sleep", 5000)
+    )
 );
 
 simulate(rootNode, bot);

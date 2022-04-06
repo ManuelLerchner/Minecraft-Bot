@@ -15,6 +15,7 @@ import {
     TakeFromChestNode,
 } from "../Nodes/ASTNodes/Tasks/Tasks";
 import { AndNode } from "../Nodes/CondtionNodes/Boolean/AndNode";
+import { NotNode } from "../Nodes/CondtionNodes/Boolean/NotNode";
 import { ConditionNode } from "../Nodes/CondtionNodes/CondtionNode";
 import { FunctionCondtionNode } from "../Nodes/CondtionNodes/Condtitions/FunctionConditionNode";
 import { InventoryConditionNode } from "../Nodes/CondtionNodes/Condtitions/InventoryConditionNode";
@@ -31,64 +32,55 @@ let hasPickaxeWithMoreThan10Durability: ConditionNode = new InventoryConditionNo
 );
 
 export const farmCobbleNode: ASTNode = new SequentialNode(
-    new SequentialNode(
-        new IfNode(
-            new InventoryConditionNode("atleast", 1, "wooden_pickaxe"),
-            new SequentialNode(
-                new EquipNode("wooden_pickaxe to hand", {
+    new IfNode(
+        new NotNode(hasPickaxeWithMoreThan10Durability),
+        new SequentialNode(
+            new GoToNode("chests", new Vec3(217, 64, 173)),
+
+            new DepositToChestNode("used wooden pickaxe", new Vec3(219, 64, 171), {
+                itemName: "wooden_pickaxe",
+                amount: "all",
+            }),
+
+            new TryNode(
+                new TakeFromChestNode("take pickaxe", new Vec3(219, 64, 173), {
                     itemName: "wooden_pickaxe",
-                    place: "hand",
+                    amount: 1,
                 }),
-                new IfNode(
-                    hasPickaxeWithMoreThan10Durability,
-                    new SequentialNode(
-                        new GoToNode("cobble farm", new Vec3(214, 64, 181)),
+                new SleepNode("because there no pickaxe in chest", 5000)
+            )
+        )
+    ),
 
-                        new WhileNode(
-                            new AndNode(
-                                new InventoryConditionNode("atmost", 10, "cobblestone"),
-                                hasPickaxeWithMoreThan10Durability
-                            ),
-                            new SequentialNode(
-                                new MineBlockNode("cobble 1", new Vec3(215, 65, 181)),
-                                new MineBlockNode("cobble 2", new Vec3(214, 65, 180))
-                            )
-                        ),
+    new SequentialNode(
+        new EquipNode("wooden_pickaxe to hand", {
+            itemName: "wooden_pickaxe",
+            place: "hand",
+        }),
 
-                        new ChatNode("enough cobble", "I have enough cobble"),
-                        new GoToNode("cobblestone chest", new Vec3(219, 64, 175)),
+        new GoToNode("cobble farm", new Vec3(214, 64, 181)),
 
-                        new TryNode(
-                            new DepositToChestNode("all cobblestone", new Vec3(219, 64, 175), {
-                                itemName: "cobblestone",
-                                amount: "all",
-                            }),
-                            new IdleNode("because chest is full")
-                        ),
-
-                        new SleepNode("wait a bit", 2000)
-                    ),
-                    new SequentialNode(
-                        new GoToNode("used pickaxes chest", new Vec3(217, 64, 171)),
-
-                        new DepositToChestNode("used wooden pickaxe", new Vec3(219, 64, 171), {
-                            itemName: "wooden_pickaxe",
-                            amount: 1,
-                        })
-                    )
-                )
+        new WhileNode(
+            new AndNode(
+                new InventoryConditionNode("atmost", 10, "cobblestone"),
+                hasPickaxeWithMoreThan10Durability
             ),
             new SequentialNode(
-                new GoToNode("pickaxe chest", new Vec3(217, 64, 173)),
-
-                new TryNode(
-                    new TakeFromChestNode("take pickaxe", new Vec3(219, 64, 173), {
-                        itemName: "wooden_pickaxe",
-                        amount: 1,
-                    }),
-                    new SleepNode("because there no pickaxe in chest", 5000)
-                )
+                new MineBlockNode("cobble 1", new Vec3(215, 65, 181)),
+                new MineBlockNode("cobble 2", new Vec3(214, 65, 180))
             )
+        ),
+
+        new ChatNode("enough cobble", "I have enough cobble"),
+
+        new GoToNode("chests", new Vec3(217, 64, 173)),
+
+        new TryNode(
+            new DepositToChestNode("all cobblestone", new Vec3(219, 64, 175), {
+                itemName: "cobblestone",
+                amount: "all",
+            }),
+            new IdleNode("because chest is full")
         )
     )
 );
