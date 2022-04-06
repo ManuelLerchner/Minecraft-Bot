@@ -54,12 +54,16 @@ export class MineBlockNode extends TaskNode {
 }
 
 export class MineBlocksNode extends TaskNode {
-    constructor(description: string, private positionFunction: (bot: Bot) => Vec3[]) {
+    constructor(
+        description: string,
+        private positionFunction: (bot: Bot) => Vec3[],
+        private equipTask: EquipTask
+    ) {
         super("mineBlocks", description, positionFunction);
     }
 
     getAction(bot: Bot): Action {
-        return new MineBlocksAction(bot, this.positionFunction);
+        return new MineBlocksAction(bot, this.positionFunction, this.equipTask);
     }
 }
 

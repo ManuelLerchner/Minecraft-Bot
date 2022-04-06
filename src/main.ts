@@ -39,7 +39,7 @@ const bot: Bot = createBot({
 
 let rootNode: ASTNode = new WhileNode(
     new FunctionCondtionNode("infinite repeat", () => true),
-    new TryNode(new SequentialNode(farmWoodNode), new SleepNode("sleep", 5000))
+    new TryNode(new SequentialNode(farmWoodNode, farmCobbleNode), new SleepNode("sleep", 5000))
 );
 
 simulate(rootNode, bot);

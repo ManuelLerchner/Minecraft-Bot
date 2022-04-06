@@ -2,9 +2,11 @@ import { Vec3 } from "vec3";
 import { Bot } from "mineflayer";
 import { Action } from "../Action";
 import { goals } from "mineflayer-pathfinder";
+import { EquipTask } from "../../Types/EquipTask";
+import { mcData } from "../../Settings";
 
 export class MineBlocksAction extends Action {
-    constructor(bot: Bot, private func: (bot: Bot) => Vec3[]) {
+    constructor(bot: Bot, private func: (bot: Bot) => Vec3[], private equipTask: EquipTask) {
         super(bot);
     }
 
@@ -18,9 +20,13 @@ export class MineBlocksAction extends Action {
                     throw new Error("No block at " + pos);
                 }
 
-                let targetGoal = new goals.GoalBreakBlock(pos.x, pos.y, pos.z, this.bot);
+                let targetGoal = new goals.GoalNear(pos.x, pos.y, pos.z, 3);
 
                 await this.bot.pathfinder.goto(targetGoal);
+
+                let farmItem = mcData.itemsByName[this.equipTask.itemName].id;
+
+                await this.bot.equip(farmItem, this.equipTask.place);
 
                 await this.bot.lookAt(pos, true);
 
