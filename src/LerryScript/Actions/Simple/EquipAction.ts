@@ -5,12 +5,12 @@ import { mcData } from "../../Settings";
 import { EquipTask } from "../../Types/EquipTask";
 import { EquipPosition } from "../../Types/EquipPosition";
 
-export class Equip extends Action {
+export class EquipAction extends Action {
     itemName: string;
     place: EquipPosition;
 
-    constructor(bot: Bot, name: string, private equipTask: EquipTask) {
-        super(bot, name);
+    constructor(bot: Bot, equipTask: EquipTask) {
+        super(bot);
 
         this.itemName = equipTask.itemName;
         this.place = equipTask.place;

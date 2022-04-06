@@ -1,10 +1,10 @@
 import { Action } from "../Action";
 import { Bot } from "mineflayer";
-import { MouseClick } from "../../Types/MouseClick";
+import { MouseButton } from "../../Types/MouseButton";
 
-export class ClickInventory extends Action {
-    constructor(bot: Bot, name: string, private button: MouseClick, private slotId: number) {
-        super(bot, name);
+export class ClickInventoryAction extends Action {
+    constructor(bot: Bot,  private button: MouseButton, private slotId: number) {
+        super(bot);
     }
 
     async onStateEntered() {

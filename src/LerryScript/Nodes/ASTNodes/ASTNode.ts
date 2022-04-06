@@ -1,4 +1,5 @@
 import { Bot } from "mineflayer";
+import { Action } from "../../Actions/Action";
 import { CompileResult } from "../../Types/CompileResult";
 import { Node } from "../Node";
 

@@ -4,13 +4,11 @@ import { Vec3 } from "vec3";
 import { DepositTask } from "../../Types/DepositTask";
 import { mcData } from "../../Settings";
 
-export class TakeFromChest extends Action {
+export class TakeFromChestAction extends Action {
     itemName: string;
     amount: number | "all";
-    constructor(bot: Bot, name: string, private pos: Vec3, private itemsToTake: DepositTask) {
-        super(bot, name);
-
-        console.log(itemsToTake);
+    constructor(bot: Bot, private pos: Vec3, itemsToTake: DepositTask) {
+        super(bot);
 
         this.itemName = itemsToTake.itemName;
         this.amount = itemsToTake.amount;

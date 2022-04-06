@@ -7,7 +7,7 @@ import chalk from "chalk";
 import { createTransition } from "../../../Transitions/Transitions";
 import { IdentityAction } from "../../../Actions/Simple/IdentityAction";
 
-export class SequentialNode implements ASTNode {
+export class IgnoreErrorNode implements ASTNode {
     actions: ASTNode[];
     constructor(child: ASTNode, ...children: ASTNode[]) {
         this.actions = [child, ...children];
@@ -26,10 +26,10 @@ export class SequentialNode implements ASTNode {
 
     createInternalStates(bot: Bot, compiledChildren: CompileResult[]) {
         let startSequential = new IdentityAction(bot);
-        startSequential.setStateName("Sequential-Node");
+        startSequential.setStateName("IgnoreError-Node");
 
         let endSequential = new IdentityAction(bot);
-        endSequential.setStateName("End Sequential-Node");
+        endSequential.setStateName("End IgnoreError-Node");
 
         let taskEnter = compiledChildren[0].enter;
         let taskExit = compiledChildren[compiledChildren.length - 1].exit;
@@ -38,13 +38,13 @@ export class SequentialNode implements ASTNode {
             startSequential,
             taskEnter,
             () => true,
-            "Enter Sequential-Node"
+            "Enter IgnoreError-Node"
         );
         let leaveTask = createTransition(
             taskExit,
             endSequential,
-            taskExit.isFinished,
-            "Exit from Sequential-Node"
+            () => taskExit.isFinished() || taskExit.isErrored(),
+            "Exit from IgnoreError-Node"
         );
 
         let internalActions: Action[] = [startSequential, endSequential];
@@ -75,22 +75,33 @@ export class SequentialNode implements ASTNode {
             let from = curr.exit || curr.actions[curr.actions.length - 1];
             let to = next.enter || next.actions[0];
 
-            transitions.push(createTransition(from, to, from.isFinished, "Action finsihed"));
+            transitions.push(
+                createTransition(
+                    from,
+                    to,
+                    () => from.isFinished() || from.isErrored(),
+                    "Action finsihed or Errored"
+                )
+            );
         }
 
-        for (let action of compiledChildren) {
-            actions = actions.concat(action.actions);
-            transitions = transitions.concat(action.transitions);
+        for (let compResult of compiledChildren) {
+            actions = actions.concat(compResult.actions);
+            transitions = transitions.concat(compResult.transitions);
         }
 
-        let possibleErrors = compiledChildren
-            .map((c) => c.possibleErrors)
-            .reduce((a, b) => a.concat(b), []);
+        for (let compResult of compiledChildren) {
+            for (let childAction of compResult.actions) {
+                if (!childAction.errorChaught && childAction.canThrowError()) {
+                    childAction.errorChaught = true;
+                }
+            }
+        }
 
         return {
             actions,
             transitions,
-            possibleErrors,
+            possibleErrors: [],
             enter,
             exit,
         };

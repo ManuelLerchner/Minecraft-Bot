@@ -1,12 +1,13 @@
 import { Bot } from "mineflayer";
 import { StateTransition } from "mineflayer-statemachine";
 import { Action } from "../../../Actions/Action";
-import { Identity } from "../../../Actions/Simple/Identity";
+
 import { CompileResult } from "../../../Types/CompileResult";
 import { ASTNode } from "../ASTNode";
 import { ConditionNode } from "../../CondtionNodes/CondtionNode";
 import chalk from "chalk";
 import { createTransition } from "../../../Transitions/Transitions";
+import { IdentityAction } from "../../../Actions/Simple/IdentityAction";
 
 export class IfNode implements ASTNode {
     constructor(
@@ -37,8 +38,11 @@ export class IfNode implements ASTNode {
         compiledTrueBranch: CompileResult,
         compiledFalseBranch: CompileResult | null
     ) {
-        let startIf = new Identity(bot, "If-Node:\n" + this.condition.getName());
-        let endIf = new Identity(bot, "End If-Node");
+        let startIf = new IdentityAction(bot);
+        startIf.setStateName("If-Node:\n" + this.condition.getName());
+
+        let endIf = new IdentityAction(bot);
+        endIf.setStateName("End If-Node");
 
         let internalActions: Action[] = [startIf, endIf];
         let internalTransitions: StateTransition[] = [];

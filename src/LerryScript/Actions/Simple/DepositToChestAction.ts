@@ -4,12 +4,12 @@ import { Vec3 } from "vec3";
 import { DepositTask } from "../../Types/DepositTask";
 import { mcData } from "../../Settings";
 
-export class DepositToChest extends Action {
+export class DepositToChestAction extends Action {
     itemName: string;
     amount: number | "all";
 
-    constructor(bot: Bot, name: string, private pos: Vec3, private itemsToDeposit: DepositTask) {
-        super(bot, name);
+    constructor(bot: Bot, private pos: Vec3, private itemsToDeposit: DepositTask) {
+        super(bot);
 
         this.itemName = itemsToDeposit.itemName;
         this.amount = itemsToDeposit.amount;

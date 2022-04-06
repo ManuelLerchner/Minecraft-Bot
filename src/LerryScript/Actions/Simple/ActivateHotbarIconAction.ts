@@ -1,9 +1,9 @@
 import { Action } from "../Action";
 import { Bot } from "mineflayer";
 
-export class ActivateHotbarIcon extends Action {
-    constructor(bot: Bot, name: string, private hotbarIdx: number) {
-        super(bot, name);
+export class ActivateHotbarIconAction extends Action {
+    constructor(bot: Bot, private hotbarIdx: number) {
+        super(bot);
     }
 
     async onStateEntered() {

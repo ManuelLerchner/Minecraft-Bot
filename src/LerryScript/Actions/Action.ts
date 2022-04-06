@@ -4,26 +4,24 @@ import chalk from "chalk";
 import { PRINT_ERROR, PRINT_STATES } from "../Settings";
 
 export abstract class Action implements StateBehavior {
-    bot: Bot;
     active: boolean = false;
-    stateName: string = "";
+    stateName: string = "No-State";
 
     finished = false;
     error = false;
     errorChaught: boolean = false;
 
-    constructor(bot: Bot, stateName: string) {
-        this.bot = bot;
-        this.stateName = stateName;
-
-        this.active = false;
-
+    constructor(protected bot: Bot) {
         this.reset = this.reset.bind(this);
         this.isFinished = this.isFinished.bind(this);
         this.setFinished = this.setFinished.bind(this);
         this.setError = this.setError.bind(this);
         this.isErrored = this.isErrored.bind(this);
         this.onStateExited = this.onStateExited.bind(this);
+    }
+
+    setStateName(stateName: string) {
+        this.stateName = stateName;
     }
 
     reset() {

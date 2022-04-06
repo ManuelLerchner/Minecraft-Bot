@@ -1,10 +1,9 @@
-
 import { Bot } from "mineflayer";
 import { Action } from "../Action";
 
-export class Identity extends Action {
-    constructor(bot: Bot, name: string) {
-        super(bot, name);
+export class IdentityAction extends Action {
+    constructor(bot: Bot) {
+        super(bot);
     }
 
     onStateEntered(): void {

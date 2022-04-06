@@ -2,9 +2,9 @@
 import { Bot } from "mineflayer";
 import { Action } from "../Action";
 
-export class IdleState extends Action {
-    constructor(bot: Bot, errorMsg: string) {
-        super(bot, errorMsg);
+export class IdleAction extends Action {
+    constructor(bot: Bot) {
+        super(bot);
     }
 
     onStateEntered(): void {}

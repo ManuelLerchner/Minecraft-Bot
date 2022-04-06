@@ -1,9 +1,9 @@
 import { Bot } from "mineflayer";
 import { Action } from "../Action";
 
-export class Call extends Action {
-    constructor(bot: Bot, name: string, private func: () => void) {
-        super(bot, name);
+export class CallAction extends Action {
+    constructor(bot: Bot, private func: () => void) {
+        super(bot);
     }
 
     onStateEntered(): void {

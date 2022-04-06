@@ -6,7 +6,7 @@ import { ASTNode } from "../ASTNode";
 import chalk from "chalk";
 
 import { createTransition } from "../../../Transitions/Transitions";
-import { Identity } from "../../../Actions/Simple/Identity";
+import { IdentityAction } from "../../../Actions/Simple/IdentityAction";
 
 export class TryNode implements ASTNode {
     constructor(public task: ASTNode, public error: ASTNode) {}
@@ -25,8 +25,11 @@ export class TryNode implements ASTNode {
     }
 
     createInternalStates(bot: Bot, compiledTask: CompileResult, compiledError: CompileResult) {
-        let startTry = new Identity(bot, "Try-Node");
-        let endTry = new Identity(bot, "End Try-Node");
+        let startTry = new IdentityAction(bot);
+        startTry.setStateName("Try-Node");
+
+        let endTry = new IdentityAction(bot);
+        endTry.setStateName("End Try-Node");
 
         let taskEnter = compiledTask.enter;
         let errorEnter = compiledError.enter;
@@ -98,13 +101,4 @@ export class TryNode implements ASTNode {
             exit: internal.exit,
         };
     }
-
-    // createTransition(from: Action, to: Action, func: () => boolean): StateTransition {
-    //     return new StateTransition({
-    //         parent: from,
-    //         child: to,
-    //         shouldTransition: func,
-    //         name: from.stateName + " -> " + to.stateName,
-    //     });
-    // }
 }

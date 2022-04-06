@@ -1,9 +1,9 @@
 import { Bot } from "mineflayer";
 import { Action } from "../Action";
 
-export class Sleep extends Action {
-    constructor(bot: Bot, name: string, private msSleep: number) {
-        super(bot, name);
+export class SleepAction extends Action {
+    constructor(bot: Bot, private msSleep: number) {
+        super(bot);
     }
 
     onStateEntered(): void {

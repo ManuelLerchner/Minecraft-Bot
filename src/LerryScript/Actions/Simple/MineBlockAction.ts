@@ -1,11 +1,10 @@
-
 import { Vec3 } from "vec3";
 import { Bot } from "mineflayer";
 import { Action } from "../Action";
 
-export class Mine extends Action {
-    constructor(bot: Bot, name: string, private pos: Vec3) {
-        super(bot, name);
+export class MineBlockAction extends Action {
+    constructor(bot: Bot, private pos: Vec3) {
+        super(bot);
     }
 
     async onStateEntered() {

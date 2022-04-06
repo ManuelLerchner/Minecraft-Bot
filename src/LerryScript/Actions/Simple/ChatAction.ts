@@ -1,9 +1,9 @@
 import { Action } from "../Action";
 import { Bot } from "mineflayer";
 
-export class Chat extends Action {
-    constructor(bot: Bot, name: string, private message: string) {
-        super(bot, name);
+export class ChatAction extends Action {
+    constructor(bot: Bot, private message: string) {
+        super(bot);
     }
 
     onStateEntered(): void {
