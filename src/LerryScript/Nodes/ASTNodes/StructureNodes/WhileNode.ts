@@ -9,7 +9,7 @@ import { createTransition } from "../../../Transitions/Transitions";
 import { IdentityAction } from "./../../../Actions/Simple/IdentityAction";
 
 export class WhileNode implements ASTNode {
-    constructor(private condition: ConditionNode, public body: ASTNode) {}
+    constructor(private condition: ConditionNode, private body: ASTNode) {}
 
     prettyPrint(indent: number): string {
         let indentation = " ".repeat(indent * 4);
@@ -23,7 +23,7 @@ export class WhileNode implements ASTNode {
         return str;
     }
 
-    createInternalStates(bot: Bot, compiledBody: CompileResult) {
+    private createInternalStates(bot: Bot, compiledBody: CompileResult) {
         let startWhile = new IdentityAction(bot);
         startWhile.setStateName("While-Node:" + this.condition.getName());
 

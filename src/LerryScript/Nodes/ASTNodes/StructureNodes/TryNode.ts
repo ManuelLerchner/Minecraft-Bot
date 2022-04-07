@@ -9,7 +9,7 @@ import { createTransition } from "../../../Transitions/Transitions";
 import { IdentityAction } from "../../../Actions/Simple/IdentityAction";
 
 export class TryNode implements ASTNode {
-    constructor(public task: ASTNode, public error: ASTNode) {}
+    constructor(private task: ASTNode, private error: ASTNode) {}
 
     prettyPrint(indent: number): string {
         let indentation = " ".repeat(indent * 4);
@@ -24,7 +24,11 @@ export class TryNode implements ASTNode {
         return str;
     }
 
-    createInternalStates(bot: Bot, compiledTask: CompileResult, compiledError: CompileResult) {
+    private createInternalStates(
+        bot: Bot,
+        compiledTask: CompileResult,
+        compiledError: CompileResult
+    ) {
         let startTry = new IdentityAction(bot);
         startTry.setStateName("Try-Node");
 

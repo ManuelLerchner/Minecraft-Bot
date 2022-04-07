@@ -8,16 +8,16 @@ import { createTransition } from "../../../Transitions/Transitions";
 import { IdentityAction } from "../../../Actions/Simple/IdentityAction";
 
 export class SequentialNode implements ASTNode {
-    actions: ASTNode[];
+    private children: ASTNode[];
     constructor(child: ASTNode, ...children: ASTNode[]) {
-        this.actions = [child, ...children];
+        this.children = [child, ...children];
     }
 
     prettyPrint(indent: number): string {
         let indentation = " ".repeat(indent * 4);
         let str = "";
         str += indentation + chalk.blue("{\n");
-        for (let action of this.actions) {
+        for (let action of this.children) {
             str += action.prettyPrint(indent + 1) + "\n";
         }
         str += indentation + chalk.blue("}");
@@ -59,7 +59,7 @@ export class SequentialNode implements ASTNode {
     }
 
     compile(bot: Bot): CompileResult {
-        let compiledChildren = this.actions.map((action) => action.compile(bot));
+        let compiledChildren = this.children.map((action) => action.compile(bot));
 
         let {
             internalActions: actions,

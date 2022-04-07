@@ -11,9 +11,9 @@ import { IdentityAction } from "../../../Actions/Simple/IdentityAction";
 
 export class IfNode implements ASTNode {
     constructor(
-        public condition: ConditionNode,
-        public ifTrue: ASTNode,
-        public ifFalse?: ASTNode
+        private condition: ConditionNode,
+        private ifTrue: ASTNode,
+        private ifFalse?: ASTNode
     ) {}
 
     prettyPrint(indent: number): string {
@@ -33,7 +33,7 @@ export class IfNode implements ASTNode {
         return str;
     }
 
-    createInternalStates(
+    private createInternalStates(
         bot: Bot,
         compiledTrueBranch: CompileResult,
         compiledFalseBranch: CompileResult | null

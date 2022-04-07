@@ -13,11 +13,11 @@ export abstract class TaskNode implements ASTNode {
         this.params = params;
     }
 
-    getStateName() {
+    private getStateName() {
         return this.action + ": '" + this.description + ": " + this.formatParameters(this.params);
     }
 
-    formatParameters(params: any[]): string {
+    private formatParameters(params: any[]): string {
         let str = params
             .map((param) => {
                 if (param instanceof Vec3) {
