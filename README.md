@@ -2,11 +2,9 @@
 
 ## Introduction
 
-
 In this project i built a compiler for the mineflayer-statemachine api, to improve the developer experience when trying to create a mineflayer-bot.
 
 ## Concept
-
 
 To prevent the programmer from hard-coding the underlying state machine by hand, you can use different nodes, to build a complete abract-syntax-tree, which then gets compiled down to the state-machine level.
 
@@ -60,10 +58,7 @@ The compiled program gets printed to the console and additionaly the statemachin
 
 ![Cobble-Miner-big](https://user-images.githubusercontent.com/54124311/163497453-c7b941cd-c6ab-4012-8fe6-c0f177817ff7.png)
 
-
 ## Features
-
-
 
 This is a subset of the actual UML-Diagram to get an overview of the code-structure.
 
@@ -95,9 +90,9 @@ There exist the following implementations:
   - `OrNode`
   - `NotNode`
 
+---
+
 ## TaskNode
-
-
 
 The `TaskNode` is an abstract class representing the actual task of the bot. \
 The actual logic gets implemented by its direct children-classes.
@@ -117,9 +112,156 @@ The actual logic gets implemented by its direct children-classes.
 - `WalkOverAreaNode`
 - `PlaceBlockNode`
 
+## GoToNode
+
+Tells the bot to go to the specified coordinates.
+
+```ts
+constructor(description: string, private position: Vec3) {
+  super("goto", description, position);
+}
+```
+
+## SleepNode
+
+Tells the bot to sleep for the specified time.
+
+```ts
+constructor(description: string, private blockPos: Vec3) {
+  super("mineBlock", description, blockPos);
+}
+```
+
+## MineBlockNode
+
+Tells the bot to mine a specific block.
+
+```ts
+constructor(description: string, private millis: number) {
+  super("sleep", description, millis);
+}
+```
+
+## MineBlocksNode
+
+Tells the bot to mine multiple blocks, based on a function call which returns all the blocks which should be mined.
+
+```ts
+constructor(
+  description: string,
+  private positionFunction: (bot: Bot) => Vec3[],
+  private equipTask: EquipTask
+) {
+  super("mineBlocks", description, positionFunction);
+}
+```
+
+## DepositToChestNode
+
+Tells the bot to deposit a specific item into a provided chest.
+
+```ts
+constructor(description: string, private chestPos: Vec3, private task: DepositTask) {
+      super("depositToChest", description, chestPos, task);
+}
+```
+
+## EquipNode
+
+Tells the bot to equip a specific item to a specific slot on the bot.
+
+```ts
+constructor(description: string, private equipTask: EquipTask) {
+  super("equip", description, equipTask);
+}
+```
+
+## CallNode
+
+Tells the bot to call a specific function.
+
+```ts
+constructor(description: string, private func: () => void) {
+    super("call", description, func);
+}
+```
+
+## ChatNode
+
+Tells the bot to write a specific message in the chat.
+
+```ts
+constructor(description: string, private chatMessage: string){
+  super("chat", description, chatMessage);
+}
+```
+
+## IdleNode
+
+Tells the bot to go into an idle state.
+
+```ts
+constructor(description: string) {
+    super("idle", description);
+}
+```
+
+## ActivateHotbarIconNode
+
+Tells the bot to activate an item in the hotbar.
+
+```ts
+constructor(description: string, private slot: number) {
+    super("activateHotbarIcon", description, slot);
+}
+```
+
+## ClickInventoryNode
+
+Tells the bot to click on an item in the inventory.
+
+```ts
+constructor(description: string, private button: MouseButton, private slot: number) {
+      super("clickInventory", description, slot);
+  }
+```
+
+## TakeFromChestNode
+
+Tells the bot to take a specific item from the chest.
+
+```ts
+constructor(description: string, private chestPos: Vec3, private takeTask: DepositTask) {
+  super("takeFromChest", description, chestPos, takeTask);
+}
+```
+
+## WalkOverAreaNode
+
+Tells the bot to walk over a specified area, useful for collecting items.
+
+```ts
+constructor(description: string, private corner1: Vec3, private corner2: Vec3) {
+  super("walkOverArea", description, corner1, corner2);
+}
+```
+
+## PlaceBlockNode
+
+Tells the bot to place a block on the specified block, uses the given direction to figure out the angle the bot should be placed from.
+
+```ts
+constructor(
+  description: string,
+  private placeDirection: Direction,
+  private referencePos: Vec3,
+  private itemName: string
+) {
+  super("placeBlock", description, placeDirection, referencePos, itemName);
+}
+```
+
 ## SequentialNode
-
-
 
 The sequential Node allows the excecution of multiple other Nodes in a sequential order.\
 Its constructor receives an arbitrary amount of Nodes which then get executed in order.
@@ -150,9 +292,11 @@ let rootNode: ASTNode = new SequentialNode(
 );
 ```
 
+---
+
+---
+
 ## IfNode
-
-
 
 The `IfNode` provides a way for the bot to dynamically choose between two possible branches. It evaluates the given condition and the leads the bot to the according path.
 
@@ -186,8 +330,6 @@ let rootNode: ASTNode = new IfNode(
 
 ## WhileNode
 
-
-
 The `WhileNode` provides a way for the bot to repeat a given Node, aslong as the provided condition is `true`. It evaluates the given condition and the leads the bot into the loop or exits the `WhileNode` if the condition evaluates to `false`.
 
 ### WhileNode - Constructor
@@ -219,8 +361,6 @@ let rootNode: ASTNode = new WhileNode(
 
 ## TryNode
 
-
-
 The `TryNode` provides a way for the bot to dynamically switch to the error-node, if some node inside the main_task-node throws an error.
 
 ### TryNode - Constructor
@@ -251,8 +391,6 @@ let rootNode: ASTNode = new TryNode(
 
 ## IgnoreErrorNode
 
-
-
 The `IgnoreErrorNode` works similar to the `SequentialNode`. The main difference is that the `IgnoreErrorNode` continues to the next
 children-node, even if the previous one threw an error. \
 This node is just syntactic-sugar.
@@ -282,9 +420,11 @@ let rootNode: ASTNode = new IgnoreErrorNode(
 );
 ```
 
+---
+
+---
+
 ## FunctionCondtionNode
-
-
 
 The FunctionCondtionNode is used to define a condition based on the result of a function call.
 
@@ -306,8 +446,6 @@ new FunctionCondtionNode("infinite repeat", () => true);
 ```
 
 ## InventoryConditionNode
-
-
 
 The InventoryConditionNode is used to define a condition based on the current inventory of the bot.
 
@@ -345,8 +483,6 @@ new InventoryConditionNode("atleast", 1, "wooden_axe", {
 
 ## AndNode
 
-
-
 The AndNode is used to determine the logical-and of multiple `ConditionNodes`.
 
 ```ts
@@ -371,8 +507,6 @@ new AndNode(
 
 ## OrNode
 
-
-
 The OrNode is used to determine the logical-or of multiple `ConditionNodes`.
 
 ```ts
@@ -396,8 +530,6 @@ new OrNode(
 ```
 
 ## NotNode
-
-
 
 The NotNode is used to determine the logical-not of a `ConditionNodes`.
 
