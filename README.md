@@ -2,13 +2,11 @@
 
 ## Introduction
 
----
 
 In this project i built a compiler for the mineflayer-statemachine api, to improve the developer experience when trying to create a mineflayer-bot.
 
 ## Concept
 
----
 
 To prevent the programmer from hard-coding the underlying state machine by hand, you can use different nodes, to build a complete abract-syntax-tree, which then gets compiled down to the state-machine level.
 
@@ -56,19 +54,20 @@ The compiled program gets printed to the console and additionaly the statemachin
 
 ## Example-Program
 
-![image](https://user-images.githubusercontent.com/54124311/161465425-22c1285a-4b6d-450d-a55d-1f77a8996eed.png)
+![mine-cobblestone-full-code](https://user-images.githubusercontent.com/54124311/163497433-00c5cd61-c06e-4310-b450-0ec0eebd155f.png)
 
 ## Resulting-StateMachine
 
-![image](https://user-images.githubusercontent.com/54124311/161465759-f86c8044-a204-4451-aa19-e4921b95d8d1.png)
+![Cobble-Miner-big](https://user-images.githubusercontent.com/54124311/163497453-c7b941cd-c6ab-4012-8fe6-c0f177817ff7.png)
+
 
 ## Features
 
----
+
 
 This is a subset of the actual UML-Diagram to get an overview of the code-structure.
 
-<img src="./images/UMLClassDiagram.svg" style="background-color:white">
+![UMLClassDiagram-1](https://user-images.githubusercontent.com/54124311/163497567-eae8ebe3-9db5-45d3-a9fb-eefca60a85ad.png)
 
 There are two different types of nodes:
 
@@ -98,7 +97,7 @@ There exist the following implementations:
 
 ## TaskNode
 
----
+
 
 The `TaskNode` is an abstract class representing the actual task of the bot. \
 The actual logic gets implemented by its direct children-classes.
@@ -120,7 +119,7 @@ The actual logic gets implemented by its direct children-classes.
 
 ## SequentialNode
 
----
+
 
 The sequential Node allows the excecution of multiple other Nodes in a sequential order.\
 Its constructor receives an arbitrary amount of Nodes which then get executed in order.
@@ -153,7 +152,7 @@ let rootNode: ASTNode = new SequentialNode(
 
 ## IfNode
 
----
+
 
 The `IfNode` provides a way for the bot to dynamically choose between two possible branches. It evaluates the given condition and the leads the bot to the according path.
 
@@ -187,7 +186,7 @@ let rootNode: ASTNode = new IfNode(
 
 ## WhileNode
 
----
+
 
 The `WhileNode` provides a way for the bot to repeat a given Node, aslong as the provided condition is `true`. It evaluates the given condition and the leads the bot into the loop or exits the `WhileNode` if the condition evaluates to `false`.
 
@@ -220,7 +219,7 @@ let rootNode: ASTNode = new WhileNode(
 
 ## TryNode
 
----
+
 
 The `TryNode` provides a way for the bot to dynamically switch to the error-node, if some node inside the main_task-node throws an error.
 
@@ -252,7 +251,7 @@ let rootNode: ASTNode = new TryNode(
 
 ## IgnoreErrorNode
 
----
+
 
 The `IgnoreErrorNode` works similar to the `SequentialNode`. The main difference is that the `IgnoreErrorNode` continues to the next
 children-node, even if the previous one threw an error. \
@@ -285,7 +284,7 @@ let rootNode: ASTNode = new IgnoreErrorNode(
 
 ## FunctionCondtionNode
 
----
+
 
 The FunctionCondtionNode is used to define a condition based on the result of a function call.
 
@@ -308,7 +307,7 @@ new FunctionCondtionNode("infinite repeat", () => true);
 
 ## InventoryConditionNode
 
----
+
 
 The InventoryConditionNode is used to define a condition based on the current inventory of the bot.
 
@@ -346,7 +345,7 @@ new InventoryConditionNode("atleast", 1, "wooden_axe", {
 
 ## AndNode
 
----
+
 
 The AndNode is used to determine the logical-and of multiple `ConditionNodes`.
 
@@ -372,7 +371,7 @@ new AndNode(
 
 ## OrNode
 
----
+
 
 The OrNode is used to determine the logical-or of multiple `ConditionNodes`.
 
@@ -398,7 +397,7 @@ new OrNode(
 
 ## NotNode
 
----
+
 
 The NotNode is used to determine the logical-not of a `ConditionNodes`.
 
