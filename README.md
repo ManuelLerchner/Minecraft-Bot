@@ -261,6 +261,10 @@ constructor(
 }
 ```
 
+---
+
+---
+
 ## SequentialNode
 
 The sequential Node allows the excecution of multiple other Nodes in a sequential order.\
@@ -291,10 +295,6 @@ let rootNode: ASTNode = new SequentialNode(
   })
 );
 ```
-
----
-
----
 
 ## IfNode
 
