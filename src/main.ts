@@ -38,31 +38,11 @@ const bot: Bot = createBot({
   username: "LerryBot",
 });
 
-// let rootNode: ASTNode = new WhileNode(
-//     new FunctionCondtionNode("infinite repeat", () => true),
-//     new TryNode(
-//         new SequentialNode(farmCobbleNode, farmWoodNode, RunParkour),
-//         new SleepNode("sleep", 5000)
-//     )
-// );
 let rootNode: ASTNode = new WhileNode(
   new FunctionCondtionNode("infinite repeat", () => true),
-  new SequentialNode(
-    new GoToNode("goto chests", new Vec3(217, 64, 173)),
-    new DepositToChestNode("deposit", new Vec3(219, 64, 171), {
-      itemName: "cobblestone",
-      amount: "all",
-    }),
-    new TryNode(
-      new TakeFromChestNode("take iron-pickaxe", new Vec3(219, 64, 173), {
-        itemName: "iron_pickaxe",
-        amount: 1,
-      }),
-      new EquipNode("equip iron-pickaxe", {
-        itemName: "iron_pickaxe",
-        place: "hand",
-      })
-    )
+  new TryNode(
+    new SequentialNode(farmCobbleNode, farmWoodNode, RunParkour),
+    new SleepNode("sleep", 5000)
   )
 );
 
