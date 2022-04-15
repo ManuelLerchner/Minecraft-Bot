@@ -36,12 +36,10 @@ export const farmCobbleNode: ASTNode = new SequentialNode(
         new NotNode(hasPickaxeWithMoreThan10Durability),
         new SequentialNode(
             new GoToNode("chests", new Vec3(217, 64, 173)),
-
             new DepositToChestNode("used wooden pickaxe", new Vec3(219, 64, 171), {
                 itemName: "wooden_pickaxe",
                 amount: "all",
             }),
-
             new TryNode(
                 new TakeFromChestNode("take pickaxe", new Vec3(219, 64, 173), {
                     itemName: "wooden_pickaxe",
@@ -51,15 +49,12 @@ export const farmCobbleNode: ASTNode = new SequentialNode(
             )
         )
     ),
-
     new SequentialNode(
         new EquipNode("wooden_pickaxe to hand", {
             itemName: "wooden_pickaxe",
             place: "hand",
         }),
-
         new GoToNode("cobble farm", new Vec3(214, 64, 181)),
-
         new WhileNode(
             new AndNode(
                 new InventoryConditionNode("atmost", 10, "cobblestone"),
@@ -70,11 +65,8 @@ export const farmCobbleNode: ASTNode = new SequentialNode(
                 new MineBlockNode("cobble 2", new Vec3(214, 65, 180))
             )
         ),
-
         new ChatNode("enough cobble", "I have enough cobble"),
-
         new GoToNode("chests", new Vec3(217, 64, 173)),
-
         new TryNode(
             new DepositToChestNode("all cobblestone", new Vec3(219, 64, 175), {
                 itemName: "cobblestone",

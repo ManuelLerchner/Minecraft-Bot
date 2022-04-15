@@ -8,17 +8,17 @@ import { TaskNode } from "./LerryScript/Nodes/ASTNodes/StructureNodes/TaskNode";
 import { TryNode } from "./LerryScript/Nodes/ASTNodes/StructureNodes/TryNode";
 import { WhileNode } from "./LerryScript/Nodes/ASTNodes/StructureNodes/WhileNode";
 import {
-    ChatNode,
-    DepositToChestNode,
-    EquipNode,
-    GoToNode,
-    IdleNode,
-    MineBlockNode,
-    MineBlocksNode,
-    PlaceBlockNode,
-    SleepNode,
-    TakeFromChestNode,
-    WalkOverAreaNode,
+  ChatNode,
+  DepositToChestNode,
+  EquipNode,
+  GoToNode,
+  IdleNode,
+  MineBlockNode,
+  MineBlocksNode,
+  PlaceBlockNode,
+  SleepNode,
+  TakeFromChestNode,
+  WalkOverAreaNode,
 } from "./LerryScript/Nodes/ASTNodes/Tasks/Tasks";
 import { AndNode } from "./LerryScript/Nodes/CondtionNodes/Boolean/AndNode";
 import { ConditionNode } from "./LerryScript/Nodes/CondtionNodes/CondtionNode";
@@ -34,16 +34,36 @@ import { farmWoodNode } from "./LerryScript/Templates/FarmWood";
 import { RunParkour } from "./LerryScript/Templates/RunParkour";
 
 const bot: Bot = createBot({
-    host: "localhost",
-    username: "LerryBot",
+  host: "localhost",
+  username: "LerryBot",
 });
 
+// let rootNode: ASTNode = new WhileNode(
+//     new FunctionCondtionNode("infinite repeat", () => true),
+//     new TryNode(
+//         new SequentialNode(farmCobbleNode, farmWoodNode, RunParkour),
+//         new SleepNode("sleep", 5000)
+//     )
+// );
 let rootNode: ASTNode = new WhileNode(
-    new FunctionCondtionNode("infinite repeat", () => true),
+  new FunctionCondtionNode("infinite repeat", () => true),
+  new SequentialNode(
+    new GoToNode("goto chests", new Vec3(217, 64, 173)),
+    new DepositToChestNode("deposit", new Vec3(219, 64, 171), {
+      itemName: "cobblestone",
+      amount: "all",
+    }),
     new TryNode(
-        new SequentialNode(farmCobbleNode, farmWoodNode, RunParkour),
-        new SleepNode("sleep", 5000)
+      new TakeFromChestNode("take iron-pickaxe", new Vec3(219, 64, 173), {
+        itemName: "iron_pickaxe",
+        amount: 1,
+      }),
+      new EquipNode("equip iron-pickaxe", {
+        itemName: "iron_pickaxe",
+        place: "hand",
+      })
     )
+  )
 );
 
 simulate(rootNode, bot);
