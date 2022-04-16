@@ -29,9 +29,9 @@ function startBot(bot: Bot, program: CompileResult, webserver: StateMachineWebse
         const NSM = new NestedStateMachine(program.transitions, program.enter);
         const stateMachine = new BotStateMachine(bot, NSM);
 
-        const movements = new Movements(bot, mcData);
-        movements.scafoldingBlocks.push(mcData.itemsByName["oak_log"].id);
-        bot.pathfinder.setMovements(movements);
+        // const movements = new Movements(bot, mcData);
+        // movements.scafoldingBlocks.push(mcData.itemsByName["oak_log"].id);
+        // bot.pathfinder.setMovements(movements);
 
         if (!webserver) {
             webserver = new StateMachineWebserver(bot, stateMachine);

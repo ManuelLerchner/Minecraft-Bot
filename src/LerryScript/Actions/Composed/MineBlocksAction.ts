@@ -20,7 +20,7 @@ export class MineBlocksAction extends Action {
                     throw new Error("No block at " + pos);
                 }
 
-                let targetGoal = new goals.GoalNear(pos.x, pos.y, pos.z, 4);
+                let targetGoal = new goals.GoalXZ(pos.x, pos.z);
 
                 await this.bot.pathfinder.goto(targetGoal);
 

@@ -76,7 +76,7 @@ export const farmWoodNode = new SequentialNode(
           itemName: "wooden_axe",
           place: "hand",
         }),
-        new SleepNode("sleep", 10000),
+        new SleepNode("sleep", 2000),
         new WalkOverAreaNode(
           "collect items",
           new Vec3(199, 64, 172),

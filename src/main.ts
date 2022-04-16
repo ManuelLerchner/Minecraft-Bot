@@ -41,7 +41,7 @@ const bot: Bot = createBot({
 let rootNode: ASTNode = new WhileNode(
   new FunctionConditionNode("infinite repeat", () => true),
   new TryNode(
-    new SequentialNode(farmWoodNode),
+    new SequentialNode(new IdleNode("")),
     new SleepNode("sleep", 5000)
   )
 );
