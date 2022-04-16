@@ -6,13 +6,13 @@ In this project i built a compiler for the mineflayer-statemachine api, to impro
 
 ## Concept
 
-To prevent the programmer from hard-coding the underlying state machine by hand, you can use different nodes, to build a complete abract-syntax-tree, which then gets compiled down to the state-machine level.
+To prevent the programmer from hard-coding the underlying state machine by hand, you can use different nodes, to build a complete abstract-syntax-tree, which then gets compiled down to the state-machine level.
 
 For example, you could enter something like:
 
 ```ts
 let rootNode: ASTNode = new WhileNode(
-  new FunctionCondtionNode("infinite repeat", () => true),
+  new FunctionConditionNode("infinite repeat", () => true),
   new SequentialNode(
     new GoToNode("goto chests", new Vec3(217, 64, 173)),
 
@@ -48,7 +48,7 @@ simulate(rootNode, bot);
 ```
 
 This creates a minecraft-bot which joins the specified server, once spawned the bot immediately begins with its tasks.\
-The compiled program gets printed to the console and additionaly the statemachine-webserver starts. On this website you can see the current state of the bot.
+The compiled program gets printed to the console and additionally the statemachine-webserver starts. On this website you can see the current state of the bot.
 
 ## Example-Program
 
@@ -70,7 +70,7 @@ There are two different types of nodes:
 2. `ConditionNodes`
 
 The ASTNode create the structure of the program, and allow the programmer to define actions which the bot should perform.\
-The ConditionNodes are used to decide the behaviour of `IfNodes` and `WhileNodes`.
+The ConditionNodes are used to decide the behavior of `IfNodes` and `WhileNodes`.
 
 There exist the following implementations:
 
@@ -267,7 +267,7 @@ constructor(
 
 ## SequentialNode
 
-The sequential Node allows the excecution of multiple other Nodes in a sequential order.\
+The sequential Node allows the execution of multiple other Nodes in a sequential order.\
 Its constructor receives an arbitrary amount of Nodes which then get executed in order.
 
 ### SequentialNode - Constructor
@@ -310,7 +310,7 @@ constructor(
 ) {}
 ```
 
-The constructor takes a ConditionNode and two nodes which should be executed wheter the condition is true or false. \
+The constructor takes a ConditionNode and two nodes which should be executed whether the condition is true or false. \
 The `isFalse` node is optional.
 
 ### IfNode - Example Usage
@@ -330,7 +330,7 @@ let rootNode: ASTNode = new IfNode(
 
 ## WhileNode
 
-The `WhileNode` provides a way for the bot to repeat a given Node, aslong as the provided condition is `true`. It evaluates the given condition and the leads the bot into the loop or exits the `WhileNode` if the condition evaluates to `false`.
+The `WhileNode` provides a way for the bot to repeat a given Node, as long as the provided condition is `true`. It evaluates the given condition and the leads the bot into the loop or exits the `WhileNode` if the condition evaluates to `false`.
 
 ### WhileNode - Constructor
 
@@ -347,7 +347,7 @@ The constructor takes a ConditionNode and a body node which gets executed until 
 
 ```ts
 let rootNode: ASTNode = new WhileNode(
-  new FunctionCondtionNode("infinite repeat", () => true),
+  new FunctionConditionNode("infinite repeat", () => true),
   new SequentialNode(
     new GoToNode("goto chests", new Vec3(217, 64, 173)),
     new DepositToChestNode("deposit", new Vec3(219, 64, 171), {
@@ -372,7 +372,7 @@ constructor(
 ) {}
 ```
 
-The constructor takes a main-node and an error-node. The bot starts to exectute the main-node, and switches to the error-node if something goes wrong while executing the main-node.
+The constructor takes a main-node and an error-node. The bot starts to execute the main-node, and switches to the error-node if something goes wrong while executing the main-node.
 
 ### TryNode - Example Usage
 
@@ -385,7 +385,7 @@ let rootNode: ASTNode = new TryNode(
       amount: "all",
     })
   ),
-  new ChatNode("error", "Hey, an error occured...")
+  new ChatNode("error", "Hey, an error occurred...")
 );
 ```
 

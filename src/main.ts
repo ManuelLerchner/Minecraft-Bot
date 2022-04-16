@@ -23,7 +23,7 @@ import {
 import { AndNode } from "./LerryScript/Nodes/CondtionNodes/Boolean/AndNode";
 import { ConditionNode } from "./LerryScript/Nodes/CondtionNodes/CondtionNode";
 
-import { FunctionCondtionNode } from "./LerryScript/Nodes/CondtionNodes/Condtitions/FunctionConditionNode";
+import { FunctionConditionNode } from "./LerryScript/Nodes/CondtionNodes/Condtitions/FunctionConditionNode";
 import { InventoryConditionNode } from "./LerryScript/Nodes/CondtionNodes/Condtitions/InventoryConditionNode";
 
 import { mcData } from "./LerryScript/Settings";
@@ -39,9 +39,9 @@ const bot: Bot = createBot({
 });
 
 let rootNode: ASTNode = new WhileNode(
-  new FunctionCondtionNode("infinite repeat", () => true),
+  new FunctionConditionNode("infinite repeat", () => true),
   new TryNode(
-    new SequentialNode(farmCobbleNode, farmWoodNode, RunParkour),
+    new SequentialNode(farmWoodNode),
     new SleepNode("sleep", 5000)
   )
 );

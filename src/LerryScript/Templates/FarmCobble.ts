@@ -17,7 +17,7 @@ import {
 import { AndNode } from "../Nodes/CondtionNodes/Boolean/AndNode";
 import { NotNode } from "../Nodes/CondtionNodes/Boolean/NotNode";
 import { ConditionNode } from "../Nodes/CondtionNodes/CondtionNode";
-import { FunctionCondtionNode } from "../Nodes/CondtionNodes/Condtitions/FunctionConditionNode";
+import { FunctionConditionNode } from "../Nodes/CondtionNodes/Condtitions/FunctionConditionNode";
 import { InventoryConditionNode } from "../Nodes/CondtionNodes/Condtitions/InventoryConditionNode";
 import { RunParkour } from "./RunParkour";
 
@@ -57,7 +57,7 @@ export const farmCobbleNode: ASTNode = new SequentialNode(
         new GoToNode("cobble farm", new Vec3(214, 64, 181)),
         new WhileNode(
             new AndNode(
-                new InventoryConditionNode("atmost", 10, "cobblestone"),
+                new InventoryConditionNode("atmost", 5, "cobblestone"),
                 hasPickaxeWithMoreThan10Durability
             ),
             new SequentialNode(

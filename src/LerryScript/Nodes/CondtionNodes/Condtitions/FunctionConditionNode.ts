@@ -1,7 +1,7 @@
 import { Bot } from "mineflayer";
 import { ConditionNode } from "../CondtionNode";
 
-export class FunctionCondtionNode implements ConditionNode {
+export class FunctionConditionNode implements ConditionNode {
     constructor(private name: string, private func: (bot: Bot) => boolean) {}
 
     prettyPrint(indent: number): string {

@@ -17,7 +17,7 @@ import {
 } from "../Nodes/ASTNodes/Tasks/Tasks";
 import { NotNode } from "../Nodes/CondtionNodes/Boolean/NotNode";
 import { ConditionNode } from "../Nodes/CondtionNodes/CondtionNode";
-import { FunctionCondtionNode } from "../Nodes/CondtionNodes/Condtitions/FunctionConditionNode";
+import { FunctionConditionNode } from "../Nodes/CondtionNodes/Condtitions/FunctionConditionNode";
 import { InventoryConditionNode } from "../Nodes/CondtionNodes/Condtitions/InventoryConditionNode";
 import { mcData } from "../Settings";
 import { Block } from "prismarine-block";
@@ -63,7 +63,7 @@ export const farmWoodNode = new SequentialNode(
   new SequentialNode(
     new GoToNode("go to center of tree farm", new Vec3(203, 64, 169)),
     new IfNode(
-      new FunctionCondtionNode(
+      new FunctionConditionNode(
         "a tree is here",
         (bot) => findTrees(bot).length > 0
       ),
