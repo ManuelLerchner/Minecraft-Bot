@@ -4,6 +4,8 @@
 
 In this project i built a compiler for the mineflayer-statemachine api, to improve the developer experience when trying to create a mineflayer-bot.
 
+You can find a full description of this project on my [website](https://minecraft-bot.manuellerchner.de/).
+
 ## Concept
 
 To prevent the programmer from hard-coding the underlying state machine by hand, you can use different nodes, to build a complete abstract-syntax-tree, which then gets compiled down to the state-machine level.
